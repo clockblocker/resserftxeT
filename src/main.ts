@@ -4,8 +4,6 @@ import addBacklinksToCurrentFile from "./commands/addBacklinksToCurrentFile";
 import fillTemplate from "./commands/fillTemplate";
 import formatSelectionWithNumber from "./commands/formatSelectionWithNumber";
 import getInfinitiveAndEmoji from "./commands/getInfinitiveAndEmoji";
-import insertReplyFromKeymaker from "./commands/insertReplyFromC1Richter";
-import insertReplyFromC1Richter from "./commands/insertReplyFromC1Richter";
 import normalizeSelection from "./commands/normalizeSelection";
 import translateSelection from "./commands/translateSelection";
 import { FileService } from "./file";
@@ -143,36 +141,6 @@ export default class TextEaterPlugin extends Plugin {
 				if (selection && view.file) {
 					if (!checking) {
 						formatSelectionWithNumber(this, editor, view.file, selection);
-					}
-					return true;
-				}
-				return false;
-			},
-		});
-
-		this.addCommand({
-			id: "check-ru-de-translation",
-			name: "Keymaker",
-			editorCheckCallback: (checking: boolean, editor: Editor) => {
-				const selection = editor.getSelection();
-				if (selection) {
-					if (!checking) {
-						insertReplyFromKeymaker(this, editor, selection);
-					}
-					return true;
-				}
-				return false;
-			},
-		});
-
-		this.addCommand({
-			id: "check-schriben",
-			name: "Schriben check",
-			editorCheckCallback: (checking: boolean, editor: Editor) => {
-				const selection = editor.getSelection();
-				if (selection) {
-					if (!checking) {
-						insertReplyFromC1Richter(this, editor, selection);
 					}
 					return true;
 				}

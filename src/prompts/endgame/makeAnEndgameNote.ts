@@ -1,8 +1,7 @@
 import type TextEaterPlugin from "main";
 import { makeMorphemBlock } from "note-block-manager/common-blocks/morphems";
 import { NoteBlockId } from "note-block-manager/note-block-management/types-and-constants";
-import { MarkdownView, type TFile } from "obsidian";
-import { setTimeout } from "timers/promises";
+import type { TFile } from "obsidian";
 import { makeNewFileContent } from "../../note-block-manager/note-block-management/new-note";
 import { formatGrundform } from "./grundform/formatters/grundform";
 import { getMaybeExistingNotePath } from "./grundform/formatters/link";

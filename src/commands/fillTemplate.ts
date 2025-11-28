@@ -1,4 +1,4 @@
-import { type Editor, MarkdownView, Notice, type TFile } from "obsidian";
+import { type Editor, Notice, type TFile } from "obsidian";
 import type TextEaterPlugin from "../main";
 import { prompts } from "../prompts";
 import { longDash } from "../utils";
@@ -38,7 +38,7 @@ function incertYouglishLinkInIpa(baseBlock: string) {
 
 	return (
 		baseBlock.slice(0, ipa1 + 1) +
-		`(https://youglish.com/pronounce/${word}/german)` +
+		`(https://youglish.com/pronounce/${word}/hebrew)` +
 		baseBlock.slice(ipa1 + 1)
 	);
 }
@@ -80,17 +80,14 @@ export default async function fillTemplate(
 	const word = file.basename;
 
 	try {
-		const [dictionaryEntry, froms, morphems, valence] = await Promise.all([
+		const [dictionaryEntry, froms, morphems] = await Promise.all([
 			plugin.apiService.generateContent(
 				prompts.generate_dictionary_entry,
 				word,
 			),
 			plugin.apiService.generateContent(prompts.generate_forms, word),
 			plugin.apiService.generateContent(prompts.morphems, word),
-			plugin.apiService.generateContent(prompts.generate_valence_block, word),
 		]);
-
-		const adjForms = extractAdjectiveForms(froms);
 
 		const trimmedBaseEntrie = `${dictionaryEntry.replace("<agent_output>", "").replace("</agent_output>", "")}`;
 
@@ -99,18 +96,12 @@ export default async function fillTemplate(
 		);
 		const morphemsBlock =
 			morphems.replace("\n", "") === longDash ? "" : `${morphems}\n`;
-		const valenceBlock =
-			valence.replace("\n", "") === longDash ? "" : `${valence}`;
 		const fromsBlock = froms.replace("\n", "") === longDash ? "" : `${froms}`;
-		const adjFormsBlock =
-			adjForms.replace("\n", "") === longDash ? "" : `${adjForms}`;
 
 		const blocks = [
 			baseBlock,
 			morphemsBlock,
-			valenceBlock,
 			fromsBlock,
-			adjFormsBlock,
 		];
 		const entrie = blocks.filter(Boolean).join("\n---\n");
 
