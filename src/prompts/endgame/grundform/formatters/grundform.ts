@@ -1,17 +1,17 @@
 import {
 	Genus,
-	Grundform,
-	GrundformWithMatch,
-	Nomen,
+	type Grundform,
+	type GrundformWithMatch,
+	type Nomen,
 	Wortart,
-} from 'prompts/endgame/zod/types';
-import { getFormatLinkToGrundformNote } from './link';
-import { formatMatch } from './match';
+} from "prompts/endgame/zod/types";
+import { getFormatLinkToGrundformNote } from "./link";
+import { formatMatch } from "./match";
 
 const nomenativeArticleFromGenus = {
-	[Genus.F]: 'die',
-	[Genus.N]: 'das',
-	[Genus.M]: 'der',
+	[Genus.F]: "die",
+	[Genus.N]: "das",
+	[Genus.M]: "der",
 };
 
 const formatNomGenus = ({ genus: g }: Nomen) => {
@@ -19,7 +19,7 @@ const formatNomGenus = ({ genus: g }: Nomen) => {
 };
 
 const formatEmojiBeschreibungs = (g: Grundform) =>
-	`${g.emojiBeschreibungs.join(' | ')}`;
+	`${g.emojiBeschreibungs.join(" | ")}`;
 
 const formattedWortartFromGrundform = (g: Grundform) => {
 	const w = g.wortart;
@@ -31,7 +31,7 @@ const formattedWortartFromGrundform = (g: Grundform) => {
 
 export async function formatGrundform(
 	g: GrundformWithMatch,
-	grundformNotePath: string | null
+	grundformNotePath: string | null,
 ): Promise<string> {
 	return [
 		formatMatch(g),
@@ -40,5 +40,5 @@ export async function formatGrundform(
 		await getFormatLinkToGrundformNote(g, grundformNotePath),
 	]
 		.filter((a) => a)
-		.join(' ');
+		.join(" ");
 }

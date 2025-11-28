@@ -1,22 +1,22 @@
-import { z } from 'zod/v4';
+import { z } from "zod/v4";
 
-export const NEW_LINE = '\n';
-export const VERTIKAL_STICK = ' | ';
-export const LINE_BREAK = '\n';
-export const COMMA = ',';
-export const SPACE = ' ';
-export const HASHTAG = '#';
+export const NEW_LINE = "\n";
+export const VERTIKAL_STICK = " | ";
+export const LINE_BREAK = "\n";
+export const COMMA = ",";
+export const SPACE = " ";
+export const HASHTAG = "#";
 
 const noteBlockIds = [
-	'Formen',
-	'Kontexte',
-	'Synonyme',
-	'Morpheme',
-	'Translations',
-	'Related',
-	'Flexion',
-	'Grammatik',
-	'Tags',
+	"Formen",
+	"Kontexte",
+	"Synonyme",
+	"Morpheme",
+	"Translations",
+	"Related",
+	"Flexion",
+	"Grammatik",
+	"Tags",
 ] as const;
 // Assume these constants are defined elsewhere in your code:
 const NoteBlockIdSchema = z.enum(noteBlockIds);
@@ -25,7 +25,7 @@ export const NoteBlockId = NoteBlockIdSchema.enum;
 export type NoteBlockId = z.infer<typeof NoteBlockIdSchema>;
 export const ALL_BLOCK_IDS = [...noteBlockIds] as NoteBlockId[];
 
-export const NOTE_BLOCK_TITLE_CSS_CLASS = 'block_title';
+export const NOTE_BLOCK_TITLE_CSS_CLASS = "block_title";
 
 type NoteBlockProps = {
 	cssClassName: string;
@@ -40,55 +40,55 @@ export const noteBlockPropsFromNoteBlockId: Record<
 > = {
 	[NoteBlockId.Formen]: {
 		cssClassName: `${NOTE_BLOCK_TITLE_CSS_CLASS}_formen`,
-		deBlockTitle: 'Formen',
+		deBlockTitle: "Formen",
 		preDelimeterSpacing: NEW_LINE,
 		weight: 0,
 	},
 	[NoteBlockId.Kontexte]: {
 		cssClassName: `${NOTE_BLOCK_TITLE_CSS_CLASS}_kontexte`,
-		deBlockTitle: 'Kontexte',
+		deBlockTitle: "Kontexte",
 		preDelimeterSpacing: `${NEW_LINE}${NEW_LINE}`,
 		weight: 1,
 	},
 	[NoteBlockId.Synonyme]: {
 		cssClassName: `${NOTE_BLOCK_TITLE_CSS_CLASS}_synonyme`,
-		deBlockTitle: 'Beziehungen',
+		deBlockTitle: "Beziehungen",
 		preDelimeterSpacing: NEW_LINE,
 		weight: 10,
 	},
 	[NoteBlockId.Morpheme]: {
 		cssClassName: `${NOTE_BLOCK_TITLE_CSS_CLASS}_morpheme`,
-		deBlockTitle: 'Morpheme',
+		deBlockTitle: "Morpheme",
 		preDelimeterSpacing: NEW_LINE,
 		weight: 20,
 	},
 	[NoteBlockId.Translations]: {
 		cssClassName: `${NOTE_BLOCK_TITLE_CSS_CLASS}_translations`,
-		deBlockTitle: 'Übersetzung',
+		deBlockTitle: "Übersetzung",
 		preDelimeterSpacing: NEW_LINE,
 		weight: 30,
 	},
 	[NoteBlockId.Related]: {
 		cssClassName: `${NOTE_BLOCK_TITLE_CSS_CLASS}_related`,
-		deBlockTitle: 'Verweise',
+		deBlockTitle: "Verweise",
 		preDelimeterSpacing: NEW_LINE,
 		weight: 40,
 	},
 	[NoteBlockId.Flexion]: {
 		cssClassName: `${NOTE_BLOCK_TITLE_CSS_CLASS}_flexion`,
-		deBlockTitle: 'Flexion',
+		deBlockTitle: "Flexion",
 		preDelimeterSpacing: NEW_LINE,
 		weight: 50,
 	},
 	[NoteBlockId.Grammatik]: {
 		cssClassName: `${NOTE_BLOCK_TITLE_CSS_CLASS}_grammatik`,
-		deBlockTitle: 'Grammatik',
+		deBlockTitle: "Grammatik",
 		preDelimeterSpacing: NEW_LINE,
 		weight: 60,
 	},
 	[NoteBlockId.Tags]: {
 		cssClassName: `${NOTE_BLOCK_TITLE_CSS_CLASS}_tags`,
-		deBlockTitle: 'Tags',
+		deBlockTitle: "Tags",
 		preDelimeterSpacing: NEW_LINE,
 		weight: 100,
 	},
@@ -99,7 +99,7 @@ export const makeBlockHeaderElementFromNoteBlockId = (id: NoteBlockId) => {
 	return `<span class="${NOTE_BLOCK_TITLE_CSS_CLASS} ${cssClassName}">${deBlockTitle}</span>`;
 };
 
-export const BLOCK_DELIMETER = '---' as const;
+export const BLOCK_DELIMETER = "---" as const;
 export type BlockContent = string;
 export type BlockHeaderElement = string;
 export type NoteBlockPreDelimeterSpacing = string;
@@ -115,7 +115,7 @@ export type BlockRepr = string;
 export type FileContent = string;
 export type ContentFromNoteBlockId = Record<
 	NoteBlockId,
-	BlockStructure['content']
+	BlockStructure["content"]
 >;
 
 export const reprFromBlockSchema = z.record(NoteBlockIdSchema, z.string());

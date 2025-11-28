@@ -1,6 +1,6 @@
-import { z } from 'zod/v4';
-import { tests } from './tests';
-import { morphemAnalysisOutputSchema } from 'prompts/endgame/zod/schemas';
+import { morphemAnalysisOutputSchema } from "prompts/endgame/zod/schemas";
+import { z } from "zod/v4";
+import { tests } from "./tests";
 
 export const makeEndgameMorhpemsPrompt = () => {
 	const instructions = `<agent_background>You are a language expert, highly knowledgeable in German linguistics, particularly in morphology and word formation. You are well-versed in traditional German linguistic terminology as well as modern analytical approaches.
@@ -59,17 +59,17 @@ const morphemAnalysisOutputSchema = z.object({
 	const validationResult = testsSchema.safeParse(tests);
 
 	if (!validationResult.success) {
-		console.error('Validation error:', validationResult.error);
-		return '';
+		console.error("Validation error:", validationResult.error);
+		return "";
 	} else {
 		const examplesXML = `<examples>${Object.entries(tests)
 			.map(
 				([key, value]) =>
 					`<example><word>${key.toLowerCase().trim()}</word><morphemicAnalyses>${JSON.stringify(
-						value
-					)}</morphemicAnalyses></example>`
+						value,
+					)}</morphemicAnalyses></example>`,
 			)
-			.join('')}</examples>`;
+			.join("")}</examples>`;
 		return instructions + schema + examplesXML;
 	}
 };

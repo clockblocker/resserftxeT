@@ -1,5 +1,5 @@
 {
-	"name": "cbcr-text-eater-de",
+	"name": "cbcr-text-eater-heb",
 	"version": "0.0.1",
 	"description": "Go trough the german texts, building your own dictionary from your personal contexts",
 	"main": "main.js",

@@ -1,4 +1,4 @@
-import { Backlink } from 'prompts/endgame/zod/types';
+import type { Backlink } from "prompts/endgame/zod/types";
 
 // plugin: TextEaterPlugin, file: TFile, word: string
 export async function tags(): Promise<{
@@ -20,7 +20,7 @@ export async function tags(): Promise<{
 	// const morphemischeZerlegungBlock = getMorphemischeZerlegungBlock(morphemAnalysis);
 
 	return await {
-		repr: 'tags',
+		repr: "tags",
 		backlinks: [],
 	};
 }

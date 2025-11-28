@@ -1,1 +1,1 @@
-export const SLASH = '/';
+export const SLASH = "/";

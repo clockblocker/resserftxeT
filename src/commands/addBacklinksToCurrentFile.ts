@@ -1,16 +1,22 @@
-import { TFile, Notice, Vault, MetadataCache, Editor } from 'obsidian';
+import {
+	type Editor,
+	type MetadataCache,
+	Notice,
+	TFile,
+	type Vault,
+} from "obsidian";
 import {
 	appendToExistingFile,
-	getExisingOrCreatedFileInWorterDir,
 	doesExistingFileContainContent,
-} from '../utils';
+	getExisingOrCreatedFileInWorterDir,
+} from "../utils";
 
 export default async function addBacklinksToCurrentFile(
 	file: TFile,
 	backlink: string,
 	vault: Vault,
 	metadataCache: MetadataCache,
-	editor: Editor
+	editor: Editor,
 ) {
 	try {
 		const fileCache = metadataCache.getFileCache(file);
@@ -42,7 +48,7 @@ export default async function addBacklinksToCurrentFile(
 				const backlinkTextInFile = await doesExistingFileContainContent(
 					vault,
 					file,
-					backlinkText
+					backlinkText,
 				);
 
 				if (!backlinkTextInFile) {

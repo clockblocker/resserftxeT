@@ -1,4 +1,9 @@
-import { Grundform, GrundformWithMatch, Match, Wortart } from '../../zod/types';
+import {
+	Grundform,
+	type GrundformWithMatch,
+	Match,
+	Wortart,
+} from "../../zod/types";
 
 export const matchScoreFromMatch: Record<Match, number> = {
 	[Match.Grundform]: 2,
@@ -8,20 +13,20 @@ export const matchScoreFromMatch: Record<Match, number> = {
 };
 
 export const reprFromMatch: Record<Match, string> = {
-	[Match.Grundform]: '',
-	[Match.Flexion]: 'Flexion',
-	[Match.Tippfehler]: 'Tippfehler',
-	[Match.Unbekannt]: 'Unbekannt',
+	[Match.Grundform]: "",
+	[Match.Flexion]: "Flexion",
+	[Match.Tippfehler]: "Tippfehler",
+	[Match.Unbekannt]: "Unbekannt",
 };
 
 export const formatMatch = ({ wortart, match }: GrundformWithMatch) => {
-	const repr = wortart === Wortart.Unbekannt ? '' : reprFromMatch[match];
+	const repr = wortart === Wortart.Unbekannt ? "" : reprFromMatch[match];
 	return repr ? `*${repr}*` : repr;
 };
 
 export function compareGrundforms(
 	a: GrundformWithMatch,
-	b: GrundformWithMatch
+	b: GrundformWithMatch,
 ): number {
 	const aScore = matchScoreFromMatch[a.match];
 	const bScore = matchScoreFromMatch[b.match];

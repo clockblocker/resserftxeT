@@ -1,26 +1,26 @@
-import { MarkdownView, TFile, App, Vault } from 'obsidian';
-import { appendToExistingFile, doesExistingFileContainContent } from './utils';
+import { type App, MarkdownView, TFile, type Vault } from "obsidian";
+import { appendToExistingFile, doesExistingFileContainContent } from "./utils";
 
 export class FileService {
 	constructor(
 		private app: App,
-		private vault: Vault
+		private vault: Vault,
 	) {}
 
 	async readFileContentByPath(
-		filePath: string
+		filePath: string,
 	): Promise<
 		{ content: string; error: true } | { content: string; error: false }
 	> {
 		try {
 			const file = this.vault.getAbstractFileByPath(filePath);
 			if (!file || !(file instanceof TFile)) {
-				return { content: '', error: true };
+				return { content: "", error: true };
 			}
 			const content = await this.vault.read(file);
 			return { content, error: false };
 		} catch (error) {
-			return { content: '', error: true };
+			return { content: "", error: true };
 		}
 	}
 
@@ -30,19 +30,19 @@ export class FileService {
 
 	async replaceContentInCurrentlyOpenedFile(
 		filePath: string,
-		newContent: string
+		newContent: string,
 	): Promise<{ error: boolean }> {
 		try {
 			const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
 
 			if (!activeView) {
-				console.warn('file not open or not active');
+				console.warn("file not open or not active");
 				return { error: true };
 			}
 
 			const file = activeView.file;
 			if (!file || file.path !== filePath) {
-				console.warn('file not open or not active');
+				console.warn("file not open or not active");
 				return { error: true };
 			}
 
@@ -68,11 +68,11 @@ export class FileService {
 
 	public showLoadingOverlay(): void {
 		// Check if the overlay already exists
-		if (document.getElementById('fileService-loading-overlay')) {
+		if (document.getElementById("fileService-loading-overlay")) {
 			return;
 		}
-		const overlay = document.createElement('div');
-		overlay.id = 'fileService-loading-overlay';
+		const overlay = document.createElement("div");
+		overlay.id = "fileService-loading-overlay";
 		// overlay.style.position = 'fixed';
 		// overlay.style.top = '0';
 		// overlay.style.left = '0';
@@ -84,10 +84,10 @@ export class FileService {
 		// overlay.style.alignItems = 'center';
 		// overlay.style.zIndex = '1000'; // Ensure it's on top
 
-		const loadingText = document.createElement('div');
-		loadingText.innerText = 'Loading...';
-		loadingText.style.fontSize = '2rem';
-		loadingText.style.color = '#fff';
+		const loadingText = document.createElement("div");
+		loadingText.innerText = "Loading...";
+		loadingText.style.fontSize = "2rem";
+		loadingText.style.color = "#fff";
 		overlay.appendChild(loadingText);
 
 		document.body.appendChild(overlay);
@@ -95,7 +95,7 @@ export class FileService {
 
 	// Exposed method to hide and remove the loading overlay
 	public hideLoadingOverlay(): void {
-		const overlay = document.getElementById('fileService-loading-overlay');
+		const overlay = document.getElementById("fileService-loading-overlay");
 		if (overlay) {
 			overlay.remove();
 		}

@@ -1,7 +1,7 @@
-import { Editor, MarkdownView, Notice, TFile } from 'obsidian';
-import TextEaterPlugin from '../main';
-import { prompts } from '../prompts';
-import { longDash } from '../utils';
+import { type Editor, MarkdownView, Notice, type TFile } from "obsidian";
+import type TextEaterPlugin from "../main";
+import { prompts } from "../prompts";
+import { longDash } from "../utils";
 
 function extractFirstBracketedWord(text: string) {
 	const match = text.match(/\[\[([^\]]+)\]\]/);
@@ -14,7 +14,7 @@ function getIPAIndexes(str: string) {
 	let match;
 
 	while ((match = regex.exec(str)) !== null) {
-		if (match.index === 0 || str[match.index - 1] !== '[') {
+		if (match.index === 0 || str[match.index - 1] !== "[") {
 			matches.push([match.index, regex.lastIndex - 1]);
 		}
 	}
@@ -44,29 +44,29 @@ function incertYouglishLinkInIpa(baseBlock: string) {
 }
 
 async function incertClipbordContentsInContextsBlock(
-	baseBlock: string
+	baseBlock: string,
 ): Promise<string> {
 	try {
-		let clipboardContent = '';
-		if (typeof navigator !== 'undefined' && navigator.clipboard) {
+		let clipboardContent = "";
+		if (typeof navigator !== "undefined" && navigator.clipboard) {
 			clipboardContent = await navigator.clipboard.readText();
 		}
-		const [first, ...rest] = baseBlock.split('---');
+		const [first, ...rest] = baseBlock.split("---");
 
 		if (rest.length >= 1) {
 			// Insert clipboard content between the first two dividers
 			return (
 				first +
-				'---\n' +
+				"---\n" +
 				clipboardContent.trim() +
-				rest.map((a) => a.trim()).join('\n\n---\n') +
-				'\n'
+				rest.map((a) => a.trim()).join("\n\n---\n") +
+				"\n"
 			);
 		}
 
 		return baseBlock;
 	} catch (error) {
-		console.error('Failed to read clipboard:', error);
+		console.error("Failed to read clipboard:", error);
 		return baseBlock;
 	}
 }
@@ -75,7 +75,7 @@ export default async function fillTemplate(
 	plugin: TextEaterPlugin,
 	editor: Editor,
 	file: TFile,
-	callBack?: () => void
+	callBack?: () => void,
 ) {
 	const word = file.basename;
 
@@ -83,7 +83,7 @@ export default async function fillTemplate(
 		const [dictionaryEntry, froms, morphems, valence] = await Promise.all([
 			plugin.apiService.generateContent(
 				prompts.generate_dictionary_entry,
-				word
+				word,
 			),
 			plugin.apiService.generateContent(prompts.generate_forms, word),
 			plugin.apiService.generateContent(prompts.morphems, word),
@@ -92,18 +92,18 @@ export default async function fillTemplate(
 
 		const adjForms = extractAdjectiveForms(froms);
 
-		const trimmedBaseEntrie = `${dictionaryEntry.replace('<agent_output>', '').replace('</agent_output>', '')}`;
+		const trimmedBaseEntrie = `${dictionaryEntry.replace("<agent_output>", "").replace("</agent_output>", "")}`;
 
 		const baseBlock = await incertClipbordContentsInContextsBlock(
-			incertYouglishLinkInIpa(trimmedBaseEntrie)
+			incertYouglishLinkInIpa(trimmedBaseEntrie),
 		);
 		const morphemsBlock =
-			morphems.replace('\n', '') === longDash ? '' : `${morphems}\n`;
+			morphems.replace("\n", "") === longDash ? "" : `${morphems}\n`;
 		const valenceBlock =
-			valence.replace('\n', '') === longDash ? '' : `${valence}`;
-		const fromsBlock = froms.replace('\n', '') === longDash ? '' : `${froms}`;
+			valence.replace("\n", "") === longDash ? "" : `${valence}`;
+		const fromsBlock = froms.replace("\n", "") === longDash ? "" : `${froms}`;
 		const adjFormsBlock =
-			adjForms.replace('\n', '') === longDash ? '' : `${adjForms}`;
+			adjForms.replace("\n", "") === longDash ? "" : `${adjForms}`;
 
 		const blocks = [
 			baseBlock,
@@ -112,7 +112,7 @@ export default async function fillTemplate(
 			fromsBlock,
 			adjFormsBlock,
 		];
-		const entrie = blocks.filter(Boolean).join('\n---\n');
+		const entrie = blocks.filter(Boolean).join("\n---\n");
 
 		const normalForm = extractFirstBracketedWord(baseBlock);
 
@@ -121,7 +121,7 @@ export default async function fillTemplate(
 		} else {
 			await plugin.fileService.writeToOpenedFile(
 				file.path,
-				`[[${normalForm}]]`
+				`[[${normalForm}]]`,
 			);
 			await navigator.clipboard.writeText(entrie);
 		}
@@ -132,7 +132,7 @@ export default async function fillTemplate(
 
 function extractBaseForms(text: string): string[] | null {
 	const match = text.match(
-		/Adjektive:\s*\[\[(.*?)\]\],\s*\[\[(.*?)\]\],\s*\[\[(.*?)\]\]/
+		/Adjektive:\s*\[\[(.*?)\]\],\s*\[\[(.*?)\]\],\s*\[\[(.*?)\]\]/,
 	);
 	if (!match) {
 		return null;
@@ -150,7 +150,7 @@ function extractAdjectiveForms(text: string): string {
 		return longDash;
 	}
 
-	const endings = ['er', 'es', 'e', 'en', 'em'];
+	const endings = ["er", "es", "e", "en", "em"];
 
 	const result: string[] = [];
 
@@ -160,5 +160,5 @@ function extractAdjectiveForms(text: string): string {
 		}
 	}
 
-	return result.join(', ');
+	return result.join(", ");
 }

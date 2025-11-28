@@ -1,15 +1,15 @@
 import {
-	ContentFromNoteBlockId,
-	NoteBlockId,
-	BlockContent,
 	ALL_BLOCK_IDS,
-	NEW_LINE,
-	VERTIKAL_STICK,
+	type BlockContent,
 	COMMA,
-	LINE_BREAK,
-	SPACE,
+	type ContentFromNoteBlockId,
 	HASHTAG,
-} from './types-and-constants';
+	LINE_BREAK,
+	NEW_LINE,
+	NoteBlockId,
+	SPACE,
+	VERTIKAL_STICK,
+} from "./types-and-constants";
 
 export function mergeBlockContentsFromIds({
 	blockContentsFromIds,
@@ -24,8 +24,8 @@ export function mergeBlockContentsFromIds({
 	ALL_BLOCK_IDS.forEach((blockId) => {
 		const mergedContent = mergerFromNoteBlockId[blockId](
 			blockContentsFromIds.map(
-				(blockContentFromId) => blockContentFromId[blockId] || ''
-			)
+				(blockContentFromId) => blockContentFromId[blockId] || "",
+			),
 		);
 
 		if (mergedContent || setOfNoteBlockIdsToCreateIfEmpty.has(blockId)) {
@@ -39,10 +39,10 @@ export function mergeBlockContentsFromIds({
 type BlocksMerger = (contents: BlockContent[]) => BlockContent;
 
 const leaveOnlyOneLeadingSymbol = (line: string) => {
-	const leadingSymbols = ['=', '≈', '≠'];
+	const leadingSymbols = ["=", "≈", "≠"];
 	for (const s of leadingSymbols) {
 		if (line.includes(s)) {
-			return s + line.replaceAll(s, '');
+			return s + line.replaceAll(s, "");
 		}
 	}
 	return line;
@@ -54,7 +54,7 @@ const trimmedAndFiltered = (contents: BlockContent[]): BlockContent[] => {
 
 export const joinLinesWithVertikalStick: BlocksMerger = (contents) => {
 	const linesInContents = trimmedAndFiltered(contents).map((c) =>
-		c.split(LINE_BREAK)
+		c.split(LINE_BREAK),
 	);
 
 	const theMostLines = Math.max(...linesInContents.map((ls) => ls.length));
@@ -67,7 +67,7 @@ export const joinLinesWithVertikalStick: BlocksMerger = (contents) => {
 			if (i < lines.length) {
 				lineParts.push(lines[i]);
 			} else {
-				lineParts.push('');
+				lineParts.push("");
 			}
 		});
 
@@ -75,7 +75,7 @@ export const joinLinesWithVertikalStick: BlocksMerger = (contents) => {
 			lineParts
 				.filter((l) => l)
 				.map((l) => leaveOnlyOneLeadingSymbol(l))
-				.join(VERTIKAL_STICK)
+				.join(VERTIKAL_STICK),
 		);
 	}
 	return lines.join(LINE_BREAK);
@@ -89,7 +89,7 @@ export const mergeWords: BlocksMerger = (contents) => {
 	const words: string[] = [];
 
 	trimmedAndFiltered(contents).forEach((c) =>
-		trimmedAndFiltered(c.split(COMMA)).forEach((word) => words.push(word))
+		trimmedAndFiltered(c.split(COMMA)).forEach((word) => words.push(word)),
 	);
 
 	return words.join(COMMA + SPACE);
@@ -99,7 +99,7 @@ export const mergeTags: BlocksMerger = (contents) => {
 	const tags: string[] = [];
 
 	trimmedAndFiltered(contents).forEach((c) =>
-		trimmedAndFiltered(c.split(HASHTAG)).forEach((tag) => tags.push(tag))
+		trimmedAndFiltered(c.split(HASHTAG)).forEach((tag) => tags.push(tag)),
 	);
 
 	return tags.map((tag) => HASHTAG + tag).join(SPACE);
@@ -110,7 +110,7 @@ export const lastReplaces: BlocksMerger = (contents) => {
 	const lastIndex = trimmedAndFilteredContents.length - 1;
 
 	if (lastIndex < 0) {
-		return '';
+		return "";
 	}
 
 	return trimmedAndFilteredContents[lastIndex];

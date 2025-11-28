@@ -1,20 +1,20 @@
-import TextEaterPlugin from 'main';
-import { TFile } from 'obsidian';
+import type TextEaterPlugin from "main";
+import type { TFile } from "obsidian";
 import {
-	GrundformKerl,
-	Wortart,
+	type GrundformKerl,
 	Match,
-	MorphemKerl,
-} from 'prompts/endgame/zod/types';
+	type MorphemKerl,
+	Wortart,
+} from "prompts/endgame/zod/types";
 
 export async function getMaybeExistingNotePath(
 	plugin: TextEaterPlugin,
 	file: TFile,
-	word: string
+	word: string,
 ) {
 	const targetFile = await plugin.app.metadataCache.getFirstLinkpathDest(
 		word,
-		file.path
+		file.path,
 	);
 	return targetFile ? targetFile.path : null;
 }
@@ -37,12 +37,12 @@ export const getPathToNote = ({
 	const noteExists = maybeExisitingNotePath !== null;
 
 	if (word.length < 2) {
-		return noteExists ? `${maybeExisitingNotePath}|${word}` : '';
+		return noteExists ? `${maybeExisitingNotePath}|${word}` : "";
 	}
 
 	switch (wortart) {
 		case Wortart.Unbekannt:
-			return '';
+			return "";
 		case Wortart.Praefix:
 			return `Grammatik/Morphem/${wortart}/List/${word} (${wortart})`;
 		case Wortart.Praeposition:
@@ -72,7 +72,7 @@ export function formatPathToNoteAsLink({
 	noteExists: boolean;
 }) {
 	if (!path) {
-		return '';
+		return "";
 	} else if (noteExists) {
 		return `[[${word}]]`;
 	}
@@ -81,7 +81,7 @@ export function formatPathToNoteAsLink({
 
 export async function getFormatLinkToGrundformNote(
 	g: GrundformKerl,
-	maybeExisitingNotePath: string | null
+	maybeExisitingNotePath: string | null,
 ) {
 	const path = getPathToNote({
 		word: g.grundform,
@@ -99,13 +99,13 @@ export async function getFormatLinkToGrundformNote(
 export async function getPathsToGrundformNotes(
 	plugin: TextEaterPlugin,
 	file: TFile,
-	kerls: GrundformKerl[]
+	kerls: GrundformKerl[],
 ) {
 	const pathsPromises = kerls.map(async (g) => {
 		const maybeExisitingNotePath = await getMaybeExistingNotePath(
 			plugin,
 			file,
-			g.grundform
+			g.grundform,
 		);
 		return await getPathToNote({
 			word: g.grundform,
@@ -121,13 +121,13 @@ export async function getPathsToGrundformNotes(
 export async function getPathsToNotes(
 	plugin: TextEaterPlugin,
 	file: TFile,
-	matchedKerls: (GrundformKerl & { match: Match })[]
+	matchedKerls: (GrundformKerl & { match: Match })[],
 ) {
 	const pathsPromises = matchedKerls.map(async (g) => {
 		const maybeExisitingNotePath = await getMaybeExistingNotePath(
 			plugin,
 			file,
-			g.grundform
+			g.grundform,
 		);
 		return await getPathToNote({
 			word: g.grundform,
@@ -143,6 +143,6 @@ export async function getPathsToNotes(
 export function getPathsToMorphemNotes(kerls: MorphemKerl[]) {
 	return kerls.map(
 		(k) =>
-			`Grammatik/Morphem/${k.morphem}/List/${k.grundform[0]}/${k.grundform} (${k.morphem})`
+			`Grammatik/Morphem/${k.morphem}/List/${k.grundform[0]}/${k.grundform} (${k.morphem})`,
 	);
 }

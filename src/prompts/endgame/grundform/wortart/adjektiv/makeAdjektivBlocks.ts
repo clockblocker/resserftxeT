@@ -1,47 +1,47 @@
-import TextEaterPlugin from 'main';
-import { TFile } from 'obsidian';
-import { makeTagChain, Tag } from 'prompts/endgame/zod/consts';
-import { adjektivOutputSchema } from 'prompts/endgame/zod/schemas';
+import type TextEaterPlugin from "main";
+import type { TFile } from "obsidian";
+import { makeTagChain, Tag } from "prompts/endgame/zod/consts";
+import { adjektivOutputSchema } from "prompts/endgame/zod/schemas";
 import {
-	Block,
-	Wortart,
-	AdjektivOutput,
-	Backlink,
+	type AdjektivOutput,
+	type Backlink,
+	type Block,
+	type GrundformKerl,
 	Match,
-	GrundformKerl,
-} from 'prompts/endgame/zod/types';
-import { getPathsToNotes } from '../../formatters/link';
-import { promtMakerFromKeyword } from '../endgamePromptMakers';
+	Wortart,
+} from "prompts/endgame/zod/types";
+import { getPathsToNotes } from "../../formatters/link";
+import { promtMakerFromKeyword } from "../endgamePromptMakers";
 import {
-	makeReprSentenceForRoot,
 	makeAllDeclensionsFromAdjektivstamm,
-} from './formatter';
+	makeReprSentenceForRoot,
+} from "./formatter";
 import {
+	type AllDeclensions,
+	type AllDeclensionsFromGrad,
+	AllDeclensionsFromGradSchema,
 	allDeclensionsFromGradKeys,
 	allDeclensionsKeys,
-	declensionKeys,
 	caseDeclensionKeys,
-	AllDeclensionsFromGradSchema,
-	AllDeclensionsFromGrad,
-	PathFromWortFromGrad,
+	declensionKeys,
+	type PathFromWort,
+	type PathFromWortFromGrad,
 	PathFromWortFromGradSchema,
-	AllDeclensions,
-	PathFromWort,
-} from './types-and-consts';
+} from "./types-and-consts";
 
 export async function makeAdjektivBlock(
 	plugin: TextEaterPlugin,
 	file: TFile,
-	word: string
+	word: string,
 ): Promise<Block | null> {
 	const prompt = promtMakerFromKeyword[Wortart.Adjektiv]();
 	const generatedAdjektivOutput = await plugin.apiService.generateContent(
 		prompt,
 		word,
-		true
+		true,
 	);
 	const parsedAdjektivOutput = adjektivOutputSchema.safeParse(
-		JSON.parse(generatedAdjektivOutput)
+		JSON.parse(generatedAdjektivOutput),
 	);
 
 	if (parsedAdjektivOutput.error) {
@@ -51,7 +51,7 @@ export async function makeAdjektivBlock(
 		});
 		await plugin.fileService.writeToOpenedFile(
 			file.path,
-			'Contact t.me/@clockblocker'
+			"Contact t.me/@clockblocker",
 		);
 		return null;
 	}
@@ -60,12 +60,12 @@ export async function makeAdjektivBlock(
 
 	const formSubblocks = await Promise.all(
 		adjektivOutput.map((o) =>
-			makeBlocksForAdjektivOutputElement(plugin, file, o)
-		)
+			makeBlocksForAdjektivOutputElement(plugin, file, o),
+		),
 	);
-	const backlinks = formSubblocks.map((s) => s.backlinks).flat();
+	const backlinks = formSubblocks.flatMap((s) => s.backlinks);
 	const adjektivOutputBlock = {
-		repr: formSubblocks.map(({ repr }) => repr).join('\n\n'),
+		repr: formSubblocks.map(({ repr }) => repr).join("\n\n"),
 		backlinks: backlinks,
 	};
 
@@ -75,12 +75,12 @@ export async function makeAdjektivBlock(
 async function makeBlocksForAdjektivOutputElement(
 	plugin: TextEaterPlugin,
 	file: TFile,
-	adjektivOutputElement: AdjektivOutput[-1]
+	adjektivOutputElement: AdjektivOutput[-1],
 ) {
 	const backlinksFromWord = await makebacklinksFromWord(
 		plugin,
 		file,
-		adjektivOutputElement
+		adjektivOutputElement,
 	);
 	const pathFromWord: PathFromWort = {};
 
@@ -104,22 +104,22 @@ async function makeBlocksForAdjektivOutputElement(
 
 	const repr = makeReprForAdjektivOutputElement(
 		adjektivOutputElement,
-		pathFromWord
+		pathFromWord,
 	);
 	return { repr, backlinks };
 }
 
 const makeReprForAdjektivOutputElement = (
 	adjektivOutputElement: AdjektivOutput[-1],
-	pathFromWord: PathFromWort
+	pathFromWord: PathFromWort,
 ) => {
 	return Object.values(adjektivOutputElement.adjektivstaemme)
 		.map((staemme) =>
 			staemme
 				.map((word) => makeReprSentenceForRoot(word, pathFromWord))
-				.join('\n\n')
+				.join("\n\n"),
 		)
-		.join('\n');
+		.join("\n");
 };
 
 type BacklinksFromWord = Record<string, Backlink[]>;
@@ -127,7 +127,7 @@ type BacklinksFromWord = Record<string, Backlink[]>;
 async function makebacklinksFromWord(
 	plugin: TextEaterPlugin,
 	file: TFile,
-	adjektivOutputElement: AdjektivOutput[-1]
+	adjektivOutputElement: AdjektivOutput[-1],
 ) {
 	const { allDeclensionsFromGrad, pathFromWortFromGrad, error } =
 		await makeDeclensionsMaps(plugin, file, adjektivOutputElement);
@@ -211,7 +211,7 @@ function getAllDeclensionsFromGrad(adjektivOutputElement: AdjektivOutput[-1]) {
 	}
 
 	const parsedAllDeclensions = AllDeclensionsFromGradSchema.safeParse(
-		unsafeAllDeclensionsFromGrad
+		unsafeAllDeclensionsFromGrad,
 	);
 
 	if (parsedAllDeclensions.error) {
@@ -225,7 +225,7 @@ function getAllDeclensionsFromGrad(adjektivOutputElement: AdjektivOutput[-1]) {
 async function makeDeclensionsMaps(
 	plugin: TextEaterPlugin,
 	file: TFile,
-	adjektivOutputElement: AdjektivOutput[-1]
+	adjektivOutputElement: AdjektivOutput[-1],
 ): Promise<
 	| {
 			allDeclensionsFromGrad: undefined;
@@ -239,7 +239,7 @@ async function makeDeclensionsMaps(
 	  }
 > {
 	const allDeclensionsFromGrad = getAllDeclensionsFromGrad(
-		adjektivOutputElement
+		adjektivOutputElement,
 	);
 	if (allDeclensionsFromGrad === undefined) {
 		return {
@@ -258,7 +258,7 @@ async function makeDeclensionsMaps(
 		const path = await makePathFromWordFromAllDeclensions(
 			plugin,
 			file,
-			declensions
+			declensions,
 		);
 		return [grad, path] as const;
 	});
@@ -271,7 +271,7 @@ async function makeDeclensionsMaps(
 	}
 
 	const parsedPathFromWortFromGrad = PathFromWortFromGradSchema.safeParse(
-		unsafePathFromWortFromGrad
+		unsafePathFromWortFromGrad,
 	);
 
 	if (parsedPathFromWortFromGrad.error) {
@@ -293,7 +293,7 @@ async function makeDeclensionsMaps(
 async function makePathFromWordFromAllDeclensions(
 	plugin: TextEaterPlugin,
 	file: TFile,
-	declensions: AllDeclensions
+	declensions: AllDeclensions,
 ) {
 	const agjSet = new Set<string>();
 
@@ -316,11 +316,11 @@ async function makePathFromWordFromAllDeclensions(
 	const paths = await getPathsToNotes(
 		plugin,
 		file,
-		kerls as (GrundformKerl & { match: Match })[]
+		kerls as (GrundformKerl & { match: Match })[],
 	);
 
 	const pathFromWort = Object.fromEntries(
-		kerls.map((k, i) => [k.grundform, paths[i]])
+		kerls.map((k, i) => [k.grundform, paths[i]]),
 	) as Record<string, string>;
 
 	return pathFromWort;

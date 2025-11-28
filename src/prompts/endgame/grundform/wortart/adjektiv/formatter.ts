@@ -1,26 +1,26 @@
 import {
-	AllDeclensions,
-	fromFromNomenDeklinationFromKasusFromCaseDeclension,
+	Genus,
+	Kasus,
+	NomenDeklination,
+	Numerus,
+} from "prompts/endgame/zod/types";
+import { formatPathToNoteAsLink } from "../../formatters/link";
+import {
+	type AllDeclensions,
 	AllDeclensionsSchema,
-	Declensions,
-	CaseDeclension,
+	allDeclensionsKeys,
+	type CaseDeclension,
+	caseDeclensionKeys,
+	type Declensions,
+	declensionKeys,
+	fromFromNomenDeklinationFromKasusFromCaseDeclension,
+	type PathFromWort,
 	pronomen,
 	verbForms,
-	allDeclensionsKeys,
-	caseDeclensionKeys,
-	declensionKeys,
-	PathFromWort,
-} from './types-and-consts';
-import { formatPathToNoteAsLink } from '../../formatters/link';
-import {
-	Kasus,
-	Genus,
-	Numerus,
-	NomenDeklination,
-} from 'prompts/endgame/zod/types';
+} from "./types-and-consts";
 
 export function makeAllDeclensionsFromAdjektivstamm(
-	roots: string[] | undefined
+	roots: string[] | undefined,
 ): AllDeclensions | undefined {
 	if (!roots) {
 		return undefined;
@@ -39,7 +39,7 @@ export function makeAllDeclensionsFromAdjektivstamm(
 				const { artikel, agj: endung } =
 					fromFromFromKasusFromCaseDeclension[kasus][caseDec][0];
 				allDeclensions[nomenDeklination][kasus][caseDec] = roots.map(
-					(root) => ({ artikel, agj: root + endung })
+					(root) => ({ artikel, agj: root + endung }),
 				);
 			}
 		}
@@ -55,9 +55,9 @@ export function makeAllDeclensionsFromAdjektivstamm(
 
 export function makeReprSentenceForRoot(
 	root: string,
-	pathFromWord: PathFromWort
+	pathFromWord: PathFromWort,
 ): string {
-	const links = ['e', 'er', 'em', 'es', 'en'].map((endung) => {
+	const links = ["e", "er", "em", "es", "en"].map((endung) => {
 		const word = root + endung;
 		const path = pathFromWord?.[word];
 		if (path === undefined) {
@@ -92,17 +92,17 @@ export function getSentencesForAllDeclensions(d: AllDeclensions): string[][] {
 			const listOfParts = cases
 				.map((cas, idx) => {
 					if (dt === undefined) {
-						return [''];
+						return [""];
 					}
 
 					const dDt = d[dt];
 					if (dDt === undefined) {
-						return [''];
+						return [""];
 					}
 
 					const dDtCas = dDt[cas];
 					if (dDtCas === undefined) {
-						return [''];
+						return [""];
 					}
 
 					const roots = dDtCas[gender];
@@ -116,13 +116,13 @@ export function getSentencesForAllDeclensions(d: AllDeclensions): string[][] {
 							: `${adj} *${noun}*`;
 					});
 				})
-				.filter((parts) => parts[0] !== '');
+				.filter((parts) => parts[0] !== "");
 
 			const verb = verbForms[gender];
 
 			const listOfFormattedSentences = listOfParts.map((parts) => {
-				const [firstLetter, secondLetter, ...rest] = parts[0].split('');
-				return `${firstLetter === '*' ? firstLetter + secondLetter.toLocaleUpperCase() : firstLetter.toLocaleUpperCase() + secondLetter}${rest.join('')} *${verb}* ${parts[1]} ${parts[2]} ${parts[3]}`;
+				const [firstLetter, secondLetter, ...rest] = parts[0].split("");
+				return `${firstLetter === "*" ? firstLetter + secondLetter.toLocaleUpperCase() : firstLetter.toLocaleUpperCase() + secondLetter}${rest.join("")} *${verb}* ${parts[1]} ${parts[2]} ${parts[3]}`;
 			});
 
 			return listOfFormattedSentences;

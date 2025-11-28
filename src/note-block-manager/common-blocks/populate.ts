@@ -1,20 +1,26 @@
-import { Vault, TFile, MetadataCache, Editor, Notice } from 'obsidian';
-import { Backlink } from 'prompts/endgame/zod/types';
+import {
+	type Editor,
+	type MetadataCache,
+	Notice,
+	TFile,
+	type Vault,
+} from "obsidian";
+import type { Backlink } from "prompts/endgame/zod/types";
 
 export async function addLinksToRelatedToBlock(
 	vault: Vault,
 	filePath: string,
-	links: string[]
+	links: string[],
 ): Promise<void> {
 	const file = vault.getAbstractFileByPath(filePath);
 	if (!file || !(file instanceof TFile)) {
-		console.error('File not found or is not a valid file');
+		console.error("File not found or is not a valid file");
 		return;
 	}
 
 	await vault.process(file, (currentContent) => {
 		const formattedTags = links.map((link) =>
-			link.startsWith('#') ? link : `#${link}`
+			link.startsWith("#") ? link : `#${link}`,
 		);
 
 		let content = currentContent;
@@ -27,19 +33,19 @@ export async function addLinksToRelatedToBlock(
 				(match, prefix, existingTags) => {
 					const existingTagsArr = existingTags
 						.split(/\s+/)
-						.filter((t: string) => t.trim() !== '');
+						.filter((t: string) => t.trim() !== "");
 					const combinedTagsSet = new Set([
 						...existingTagsArr,
 						...formattedTags,
 					]);
 					const updatedTagsLine =
-						prefix + Array.from(combinedTagsSet).join(' ');
+						prefix + Array.from(combinedTagsSet).join(" ");
 
 					return updatedTagsLine;
-				}
+				},
 			);
 		} else {
-			const tagLine = `*Tags*: ${formattedTags.join(' ')}`;
+			const tagLine = `*Tags*: ${formattedTags.join(" ")}`;
 			content += `\n---\n\n${tagLine}`;
 		}
 
@@ -50,13 +56,13 @@ export async function addLinksToRelatedToBlock(
 export async function addTagsToTagBlock(
 	vault: Vault,
 	file: TFile,
-	tags: string[]
+	tags: string[],
 ): Promise<void> {
 	await vault.process(file, (currentContent) => {
 		let content = currentContent;
 
 		const formattedTags = tags.map((tag) =>
-			tag.startsWith('#') ? tag : `#${tag}`
+			tag.startsWith("#") ? tag : `#${tag}`,
 		);
 
 		const tagBlockRegex = /^(\*Tags\*:\s*)(.*)$/m;
@@ -67,19 +73,19 @@ export async function addTagsToTagBlock(
 				(match, prefix, existingTags) => {
 					const existingTagsArr = existingTags
 						.split(/\s+/)
-						.filter((t: string) => t.trim() !== '');
+						.filter((t: string) => t.trim() !== "");
 					const combinedTagsSet = new Set([
 						...existingTagsArr,
 						...formattedTags,
 					]);
 					const updatedTagsLine =
-						prefix + Array.from(combinedTagsSet).join(' ');
+						prefix + Array.from(combinedTagsSet).join(" ");
 
 					return updatedTagsLine;
-				}
+				},
 			);
 		} else {
-			const tagLine = `*Tags*: ${formattedTags.join(' ')}`;
+			const tagLine = `*Tags*: ${formattedTags.join(" ")}`;
 			content += `\n---\n\n${tagLine}`;
 		}
 
@@ -92,12 +98,12 @@ export default async function populateBacklinks(
 	filePath: string,
 	metadataCache: MetadataCache,
 	editor: Editor,
-	backlinks: Backlink[]
+	backlinks: Backlink[],
 ) {
 	try {
 		const file = vault.getAbstractFileByPath(filePath);
 		if (!file || !(file instanceof TFile)) {
-			console.error('File not found or is not a valid file');
+			console.error("File not found or is not a valid file");
 			return;
 		}
 		// const file = vault.getAbstractFileByPath(filePath);

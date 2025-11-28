@@ -1,26 +1,26 @@
-import { mergeBlockContentsFromIds } from './merging-note-blocks';
+import { mergeBlockContentsFromIds } from "./merging-note-blocks";
 import {
-	NoteBlockId,
-	NEW_LINE,
 	ALL_BLOCK_IDS,
-	BlockStructure,
 	BLOCK_DELIMETER,
-	SET_OF_REQUIRED_TECHNIKAL_BLOCK_IDS,
-	ContentFromNoteBlockId,
-	BlockRepr,
-	FileContent,
-	BlockContent,
-	noteBlockPropsFromNoteBlockId,
-	NOTE_BLOCK_TITLE_CSS_CLASS,
+	type BlockContent,
+	type BlockRepr,
+	type BlockStructure,
+	type ContentFromNoteBlockId,
+	type FileContent,
 	makeBlockHeaderElementFromNoteBlockId,
-} from './types-and-constants';
+	NEW_LINE,
+	NOTE_BLOCK_TITLE_CSS_CLASS,
+	type NoteBlockId,
+	noteBlockPropsFromNoteBlockId,
+	SET_OF_REQUIRED_TECHNIKAL_BLOCK_IDS,
+} from "./types-and-constants";
 
 function getBlockRegex({ blockId }: { blockId: NoteBlockId }): RegExp {
 	const cssClass = noteBlockPropsFromNoteBlockId[blockId].cssClassName;
 
 	return new RegExp(
 		`(<span\\s+class=["']${NOTE_BLOCK_TITLE_CSS_CLASS}\\s+${cssClass}["']>[^<]+</span>)([\\s\\S]*?)(?=(${BLOCK_DELIMETER}|<|$))`,
-		'g'
+		"g",
 	);
 }
 
@@ -33,11 +33,11 @@ function extractBlockContent({
 }): BlockContent {
 	const regex = getBlockRegex({ blockId });
 	const match = regex.exec(content);
-	return match ? match[2].trim() : '';
+	return match ? match[2].trim() : "";
 }
 
 function BUILD_blockContentFromId_FROM_fileContent(
-	fileContent: string
+	fileContent: string,
 ): Record<NoteBlockId, BlockContent> {
 	const oldBlockContentRecord: Record<NoteBlockId, BlockContent> = {} as Record<
 		NoteBlockId,
@@ -55,7 +55,7 @@ function BUILD_blockContentFromId_FROM_fileContent(
 }
 
 function getNewSortedListByNoteBlockId<T extends { id: NoteBlockId }>(
-	blockIdsAndSomething: T[]
+	blockIdsAndSomething: T[],
 ): T[] {
 	return [...blockIdsAndSomething].sort((a, b) => {
 		const { weight: weightA } = noteBlockPropsFromNoteBlockId[a.id];
@@ -66,7 +66,7 @@ function getNewSortedListByNoteBlockId<T extends { id: NoteBlockId }>(
 }
 
 function BUILD_sortedBlockStructures_FROM_mergedContentFromNoteBlockId(
-	mergedContentFromNoteBlockId: Partial<ContentFromNoteBlockId>
+	mergedContentFromNoteBlockId: Partial<ContentFromNoteBlockId>,
 ): BlockStructure[] {
 	const blocksIdsAndStructures: {
 		id: NoteBlockId;
@@ -98,28 +98,28 @@ function BUILD_sortedBlockStructures_FROM_mergedContentFromNoteBlockId(
 	});
 
 	return getNewSortedListByNoteBlockId(blocksIdsAndStructures).map(
-		({ structure }) => structure
+		({ structure }) => structure,
 	);
 }
 
 function BUILD_sortedBlockReprs_FROM_sortedBlockStructures(
-	sortedBlockStructures: BlockStructure[]
+	sortedBlockStructures: BlockStructure[],
 ): BlockRepr[] {
 	const blockReprs = sortedBlockStructures.map(
 		({ headerElement, content, preDelimeterSpacing, delimeter }) => {
 			const spacedOutDelimiter = preDelimeterSpacing + delimeter;
 			const nonEmptyParts = [headerElement, content, spacedOutDelimiter].filter(
-				(s) => s
+				(s) => s,
 			);
 			return nonEmptyParts.join(NEW_LINE);
-		}
+		},
 	);
 
 	return blockReprs;
 }
 
 function BUILD_fileContent_FROM_sortedBlockReprs(
-	sortedBlockReprs: BlockRepr[]
+	sortedBlockReprs: BlockRepr[],
 ): string {
 	return sortedBlockReprs.join(NEW_LINE);
 }
@@ -144,11 +144,11 @@ export async function makeNewFileContent({
 
 	const sortedBlockStructures =
 		BUILD_sortedBlockStructures_FROM_mergedContentFromNoteBlockId(
-			mergedContentFromNoteBlockId
+			mergedContentFromNoteBlockId,
 		);
 
 	const sortedBlockReprs = BUILD_sortedBlockReprs_FROM_sortedBlockStructures(
-		sortedBlockStructures
+		sortedBlockStructures,
 	);
 
 	const fileContent = BUILD_fileContent_FROM_sortedBlockReprs(sortedBlockReprs);

@@ -1,13 +1,13 @@
-import { Editor, TFile } from 'obsidian';
-import TextEaterPlugin from '../main';
-import { formatSelectionWithBacklink } from '../utils';
-import { sentences } from 'sbd';
+import type { Editor, TFile } from "obsidian";
+import { sentences } from "sbd";
+import type TextEaterPlugin from "../main";
+import { formatSelectionWithBacklink } from "../utils";
 
 export default async function formatSelectionWithNumber(
 	plugin: TextEaterPlugin,
 	editor: Editor,
 	file: TFile,
-	selection: string
+	selection: string,
 ) {
 	const currentFileName = file.basename;
 
@@ -23,13 +23,13 @@ export default async function formatSelectionWithNumber(
 		const maxNumber = plugin.findHighestNumber(fileContent);
 		const nextNumber = maxNumber + 1;
 
-		let formattedText = '';
+		let formattedText = "";
 
 		if (splitSentences.length <= 2) {
 			formattedText = formatSelectionWithBacklink(
 				selection,
 				currentFileName,
-				nextNumber
+				nextNumber,
 			);
 		} else {
 			const formattedParts: string[] = [];
@@ -44,20 +44,20 @@ export default async function formatSelectionWithNumber(
 									? formatSelectionWithBacklink(
 											s.trim(),
 											currentFileName,
-											nextNumber + i
+											nextNumber + i,
 										)
-									: s
+									: s,
 							)
-							.join('')
+							.join(""),
 					);
 				}
 			}
-			formattedText = formattedParts.join('\n');
+			formattedText = formattedParts.join("\n");
 		}
 
 		await navigator.clipboard.writeText(`${formattedText}`);
 		editor.replaceSelection(`${formattedText}`);
 	} catch (error) {
-		console.error('Error formatting selection with number:', error);
+		console.error("Error formatting selection with number:", error);
 	}
 }

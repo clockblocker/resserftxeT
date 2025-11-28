@@ -1,11 +1,18 @@
-import { MarkdownView, TFile, App, Vault, Editor, TFolder } from 'obsidian';
-import { FileService } from './background-file-service';
-import { Maybe } from './types/general';
+import {
+	type App,
+	type Editor,
+	MarkdownView,
+	type TFile,
+	type TFolder,
+	Vault,
+} from "obsidian";
+import type { FileService } from "./background-file-service";
+import type { Maybe } from "./types/general";
 
 export class OpenedFileService {
 	constructor(
 		private app: App,
-		private fileService: FileService
+		private fileService: FileService,
 	) {}
 
 	async getMaybeOpenedFile(): Promise<Maybe<TFile>> {
@@ -13,14 +20,14 @@ export class OpenedFileService {
 			const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
 
 			if (!activeView) {
-				console.warn('file not open or not active');
+				console.warn("file not open or not active");
 				return { error: true };
 			}
 
 			const file = activeView.file;
 
 			if (!file) {
-				console.warn('file not open or not active');
+				console.warn("file not open or not active");
 				return { error: true };
 			}
 
@@ -36,7 +43,7 @@ export class OpenedFileService {
 	}
 
 	async replaceContentInCurrentlyOpenedFile(
-		newContent: string
+		newContent: string,
 	): Promise<Maybe<string>> {
 		const maybeFile = await this.getMaybeOpenedFile();
 		if (maybeFile.error) {
@@ -74,23 +81,23 @@ export class OpenedFileService {
 		const parent = maybeFile.data.parent;
 
 		if (!parent) {
-			return { error: true, errorText: 'Opened file does not have a parent' };
+			return { error: true, errorText: "Opened file does not have a parent" };
 		}
 
 		return { error: false, data: parent };
 	}
 
 	public showLoadingOverlay(): void {
-		if (document.getElementById('opened-file-service-loading-overlay')) {
+		if (document.getElementById("opened-file-service-loading-overlay")) {
 			return;
 		}
-		const overlay = document.createElement('div');
-		overlay.id = 'opened-file-service-loading-overlay';
+		const overlay = document.createElement("div");
+		overlay.id = "opened-file-service-loading-overlay";
 
-		const loadingText = document.createElement('div');
-		loadingText.innerText = 'Loading...';
-		loadingText.style.fontSize = '2rem';
-		loadingText.style.color = '#fff';
+		const loadingText = document.createElement("div");
+		loadingText.innerText = "Loading...";
+		loadingText.style.fontSize = "2rem";
+		loadingText.style.color = "#fff";
 		overlay.appendChild(loadingText);
 
 		document.body.appendChild(overlay);
@@ -98,7 +105,9 @@ export class OpenedFileService {
 
 	// Exposed method to hide and remove the loading overlay
 	public hideLoadingOverlay(): void {
-		const overlay = document.getElementById('opened-file-service-loading-overlay');
+		const overlay = document.getElementById(
+			"opened-file-service-loading-overlay",
+		);
 		if (overlay) {
 			overlay.remove();
 		}

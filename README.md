@@ -1,4 +1,4 @@
-# Textfresser 
+# resserftxeT 
 
 
 <p align="left">
@@ -68,7 +68,7 @@ The plugin automatically maintains bidirectional links between related words, he
 
 ## Setup
 
-0. The plugin will drastically alter the default Obsidian behavior. It is highly recommended to use it in a special Vault. The easiest way is to copy [the Vault with onboarding Tutorial](https://github.com/clockblocker/Textfresser_vault)
+0. The plugin will drastically alter the default Obsidian behavior. It is highly recommended to use it in a special Vault. The easiest way is to copy [the Vault with onboarding Tutorial](https://github.com/clockblocker/resserftxeT_vault)
 
 1. The plugin will be creating a LOT of files (every conjugation of every word will live in its own file). So it is highly recommended to make a special folder ("Worter") for all the new files to go to by default.
    ![The example of the default folder](img/worter.png)

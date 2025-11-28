@@ -1,28 +1,28 @@
-import TextEaterPlugin from 'main';
-import { TFile } from 'obsidian';
+import type TextEaterPlugin from "main";
+import type { TFile } from "obsidian";
 import {
-	getPathsToGrundformNotes,
 	formatPathToNoteAsLink,
+	getPathsToGrundformNotes,
 	getPathsToMorphemNotes,
-} from 'prompts/endgame/grundform/formatters/link';
-import { promtMakerFromKeyword } from 'prompts/endgame/grundform/wortart/endgamePromptMakers';
-import { makeTagChain, Tag } from 'prompts/endgame/zod/consts';
-import { morphemAnalysisOutputSchema } from 'prompts/endgame/zod/schemas';
-import {
-	MorphemAnalysisOutput,
+} from "prompts/endgame/grundform/formatters/link";
+import { promtMakerFromKeyword } from "prompts/endgame/grundform/wortart/endgamePromptMakers";
+import { makeTagChain, Tag } from "prompts/endgame/zod/consts";
+import { morphemAnalysisOutputSchema } from "prompts/endgame/zod/schemas";
+import type {
+	Backlink,
 	Block,
 	GrundformKerl,
-	Backlink,
+	MorphemAnalysisOutput,
 	MorphemKerl,
-} from 'prompts/endgame/zod/types';
+} from "prompts/endgame/zod/types";
 
 async function getZusammengesetztAusBlock(
 	plugin: TextEaterPlugin,
 	file: TFile,
-	morphemAnalysis: MorphemAnalysisOutput
+	morphemAnalysis: MorphemAnalysisOutput,
 ): Promise<Block> {
 	if (!morphemAnalysis.zusammengesetztAus) {
-		return { repr: '', backlinks: [] };
+		return { repr: "", backlinks: [] };
 	}
 
 	const kerls = morphemAnalysis.zusammengesetztAus.map((r) => ({
@@ -33,7 +33,7 @@ async function getZusammengesetztAusBlock(
 	const paths = await getPathsToGrundformNotes(
 		plugin,
 		file,
-		kerls as GrundformKerl[]
+		kerls as GrundformKerl[],
 	);
 
 	const backlinks: Backlink[] = [];
@@ -46,15 +46,15 @@ async function getZusammengesetztAusBlock(
 				word: kerls[i].grundform,
 				path: paths[i],
 				noteExists: false,
-			})
+			}),
 		);
 	}
 
-	return { repr: reprs.join(' + '), backlinks };
+	return { repr: reprs.join(" + "), backlinks };
 }
 
 function getMorphemischeZerlegungBlock(
-	morphemAnalysis: MorphemAnalysisOutput
+	morphemAnalysis: MorphemAnalysisOutput,
 ): Block {
 	const kerls = morphemAnalysis.morphemischeZerlegung.map((r) => ({
 		grundform: Object.keys(r)[0],
@@ -74,23 +74,23 @@ function getMorphemischeZerlegungBlock(
 				word: kerls[i].grundform,
 				path: paths[i],
 				noteExists: false,
-			})
+			}),
 		);
 	}
 
-	return { repr: reprs.join('|'), backlinks };
+	return { repr: reprs.join("|"), backlinks };
 }
 
 export async function makeMorphemBlock(
 	plugin: TextEaterPlugin,
 	file: TFile,
-	word: string
+	word: string,
 ): Promise<{ repr: string; backlinks: Backlink[] } | null> {
-	const prompt = promtMakerFromKeyword['Morphems']();
+	const prompt = promtMakerFromKeyword["Morphems"]();
 	const generatedMorphemAnalysisOutput =
 		await plugin.apiService.generateContent(prompt, word, true);
 	const parsedMorphemAnalysisOutput = morphemAnalysisOutputSchema.safeParse(
-		JSON.parse(generatedMorphemAnalysisOutput)
+		JSON.parse(generatedMorphemAnalysisOutput),
 	);
 
 	if (parsedMorphemAnalysisOutput.error) {
@@ -100,7 +100,7 @@ export async function makeMorphemBlock(
 		});
 		await plugin.fileService.writeToOpenedFile(
 			file.path,
-			'Contact t.me/@clockblocker'
+			"Contact t.me/@clockblocker",
 		);
 		return null;
 	}
@@ -109,14 +109,14 @@ export async function makeMorphemBlock(
 	const zusammengesetztAusBlock = await getZusammengesetztAusBlock(
 		plugin,
 		file,
-		morphemAnalysis
+		morphemAnalysis,
 	);
 	const morphemischeZerlegungBlock =
 		getMorphemischeZerlegungBlock(morphemAnalysis);
 
 	return {
 		repr: [morphemischeZerlegungBlock.repr, zusammengesetztAusBlock.repr].join(
-			'\n'
+			"\n",
 		),
 		backlinks: [
 			...zusammengesetztAusBlock.backlinks,

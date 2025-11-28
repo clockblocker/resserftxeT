@@ -1,4 +1,4 @@
-import { Morphem, Wortart } from 'prompts/endgame/zod/types';
+import { Morphem, Wortart } from "prompts/endgame/zod/types";
 
 const fahren = {
 	fahren: {
@@ -7,7 +7,7 @@ const fahren = {
 };
 
 const spazierenGehen = {
-	'spazieren gehen': {
+	"spazieren gehen": {
 		morphemischeZerlegung: [
 			{ spazier: Morphem.Stamm },
 			{ en: Morphem.Endung },

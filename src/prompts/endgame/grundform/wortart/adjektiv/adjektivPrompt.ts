@@ -1,6 +1,6 @@
-import { z } from 'zod/v4';
-import { tests } from './tests';
-import { adjektivOutputSchema } from 'prompts/endgame/zod/schemas';
+import { adjektivOutputSchema } from "prompts/endgame/zod/schemas";
+import { z } from "zod/v4";
+import { tests } from "./tests";
 
 export const makeEndgameAdjektivPrompt = () => {
 	const instructions = `<agent_background>
@@ -110,17 +110,17 @@ const adjektivOutputSchema = z.array(z.object({
 	const validationResult = testsSchema.safeParse(tests);
 
 	if (!validationResult.success) {
-		console.error('Validation error:', validationResult.error);
-		return '';
+		console.error("Validation error:", validationResult.error);
+		return "";
 	} else {
 		const examplesXML = `<examples>${Object.entries(tests)
 			.map(
 				([key, value]) =>
 					`<example><adjektiv_grundform>${key.toLowerCase().trim()}</adjektiv_grundform><adjektiv_breakdown>${JSON.stringify(
-						value
-					)}</adjektiv_breakdown></example>`
+						value,
+					)}</adjektiv_breakdown></example>`,
 			)
-			.join('')}</examples>`;
+			.join("")}</examples>`;
 		return instructions + schema + examplesXML;
 	}
 };

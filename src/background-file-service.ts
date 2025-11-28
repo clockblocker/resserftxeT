@@ -1,17 +1,24 @@
-import { App, Vault, TFile, Editor, MarkdownView, TFolder } from 'obsidian';
-import { Maybe, PathParts } from './types/general';
-import { SLASH } from './types/constants';
+import {
+	type App,
+	type Editor,
+	MarkdownView,
+	TFile,
+	TFolder,
+	type Vault,
+} from "obsidian";
+import { SLASH } from "./types/constants";
+import type { Maybe, PathParts } from "./types/general";
 
 const pathToFolderFromPathParts = (pathParts: PathParts) =>
 	pathParts.join(SLASH);
 
 const pathToFileFromPathParts = (pathParts: PathParts) =>
-	pathToFolderFromPathParts(pathParts) + '.md';
+	pathToFolderFromPathParts(pathParts) + ".md";
 
 export class FileService {
 	constructor(
 		private app: App,
-		private vault: Vault
+		private vault: Vault,
 	) {}
 
 	async getMaybeFileByPathParts(pathParts: PathParts): Promise<Maybe<TFile>> {
@@ -23,7 +30,7 @@ export class FileService {
 			}
 			return { data: file, error: false };
 		} catch (error) {
-			console.warn('error while getting file by path:', error);
+			console.warn("error while getting file by path:", error);
 			return { error: true };
 		}
 	}
@@ -55,12 +62,12 @@ export class FileService {
 
 	private async createFileInPath(
 		path: string,
-		content: string = ''
+		content: string = "",
 	): Promise<Maybe<TFile>> {
 		try {
 			const file = await this.vault.create(`${path}`, content);
 			if (!(file instanceof TFile)) {
-				return { error: true, errorText: 'Created item is not a file' };
+				return { error: true, errorText: "Created item is not a file" };
 			}
 			return { error: false, data: file };
 		} catch (error) {
@@ -81,7 +88,7 @@ export class FileService {
 	async createFileInFolder(
 		folder: TFolder,
 		fileName: string,
-		content: string = ''
+		content: string = "",
 	): Promise<Maybe<TFile>> {
 		const path = `${folder.path}/${fileName}`;
 		const maybeFile = await this.createFileInPath(path, content);
@@ -90,7 +97,7 @@ export class FileService {
 
 	async createFolderInFolder(
 		folder: TFolder,
-		folderName: string
+		folderName: string,
 	): Promise<Maybe<TFolder>> {
 		const path = `${folder.path}/${folderName}`;
 		const maybeFolder = await this.createFolderInPath(path);
@@ -98,7 +105,7 @@ export class FileService {
 	}
 
 	async readFileContentByPathParts(
-		pathParts: PathParts
+		pathParts: PathParts,
 	): Promise<Maybe<string>> {
 		const maybeFile = await this.getMaybeFileByPathParts(pathParts);
 		if (maybeFile.error) {
@@ -116,14 +123,14 @@ export class FileService {
 		const parent = maybeFile.data.parent;
 
 		if (!parent) {
-			return { error: true, errorText: 'File does not have a parent' };
+			return { error: true, errorText: "File does not have a parent" };
 		}
 
 		return { error: false, data: parent };
 	}
 
 	public async getSiblingsOfFileWithPath(
-		pathParts: PathParts
+		pathParts: PathParts,
 	): Promise<Maybe<Array<TFile>>> {
 		const maybeFile = await this.getMaybeFileByPathParts(pathParts);
 		if (maybeFile.error) return maybeFile;
@@ -132,13 +139,13 @@ export class FileService {
 	}
 
 	public async createManyFilesInExistingFolders(
-		files: Array<{ pathParts: PathParts; content?: string }>
+		files: Array<{ pathParts: PathParts; content?: string }>,
 	): Promise<Maybe<TFile[]>> {
 		const created: TFile[] = [];
 		const errors: string[] = [];
 
-		for (const { pathParts, content = '' } of files) {
-			const path = pathToFileFromPathParts(pathParts) + '.md';
+		for (const { pathParts, content = "" } of files) {
+			const path = pathToFileFromPathParts(pathParts) + ".md";
 			try {
 				const existing = this.vault.getAbstractFileByPath(path);
 				if (existing instanceof TFile) {
@@ -159,7 +166,7 @@ export class FileService {
 		if (errors.length > 0) {
 			console.warn(
 				`[FileService.createManyFiles] ${errors.length} error(s):`,
-				errors
+				errors,
 			);
 		}
 
@@ -167,7 +174,7 @@ export class FileService {
 	}
 
 	public async createManyFolders(
-		folderPathPartsArray: PathParts[]
+		folderPathPartsArray: PathParts[],
 	): Promise<Maybe<TFolder[]>> {
 		const created: TFolder[] = [];
 		const errors: string[] = [];
@@ -190,7 +197,7 @@ export class FileService {
 		if (errors.length > 0) {
 			console.warn(
 				`[FileService.createManyFolders] ${errors.length} error(s):`,
-				errors
+				errors,
 			);
 		}
 

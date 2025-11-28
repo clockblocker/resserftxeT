@@ -1,11 +1,11 @@
-import { Notice, TFile, TFolder, Vault, normalizePath } from 'obsidian';
+import { Notice, normalizePath, TFile, TFolder, type Vault } from "obsidian";
 
-export const longDash = '—';
+export const longDash = "—";
 
 export const extractBacklinks = (content: string): string[] => {
 	const links = content
-		.split('[[')
-		.map((part) => part.replace(/\\/g, '').split('|')[0].split(']]')[0]);
+		.split("[[")
+		.map((part) => part.replace(/\\/g, "").split("|")[0].split("]]")[0]);
 	links.shift();
 	return links;
 };
@@ -13,10 +13,10 @@ export const extractBacklinks = (content: string): string[] => {
 export function formatSelectionWithBacklink(
 	selection: string,
 	currentFileName: string,
-	nextNumber: number
+	nextNumber: number,
 ): string {
 	// Strip all newline characters and spaces from the end of the selection
-	selection = selection.replace(/[\s\n]+$/, '');
+	selection = selection.replace(/[\s\n]+$/, "");
 
 	const formattedBacklink = `*[[${currentFileName}#^${nextNumber}|^]]*`;
 	return `${formattedBacklink} ${selection} ^${nextNumber}\n`;
@@ -25,7 +25,7 @@ export function formatSelectionWithBacklink(
 export async function appendToExistingFile(
 	vault: Vault,
 	file: TFile,
-	text: string
+	text: string,
 ): Promise<void> {
 	try {
 		await vault.process(file, (currentContent) => {
@@ -40,7 +40,7 @@ export async function appendToExistingFile(
 export async function doesExistingFileContainContent(
 	vault: Vault,
 	file: TFile,
-	content: string
+	content: string,
 ): Promise<boolean | null> {
 	try {
 		const fileContent = await vault.read(file);
@@ -53,7 +53,7 @@ export async function doesExistingFileContainContent(
 
 export async function getExisingOrCreatedFileInWorterDir(
 	vault: Vault,
-	item: { name: string; path: string | null }
+	item: { name: string; path: string | null },
 ): Promise<TFile | null> {
 	try {
 		let filePath: string;
@@ -72,25 +72,25 @@ export async function getExisingOrCreatedFileInWorterDir(
 
 			// used only for folder sharding
 			const shardKey = originalName
-				.normalize('NFD')
-				.replace(/[\u0300-\u036f]/g, '')
-				.replace(/[^a-zA-Z0-9]/g, '')
+				.normalize("NFD")
+				.replace(/[\u0300-\u036f]/g, "")
+				.replace(/[^a-zA-Z0-9]/g, "")
 				.toLowerCase()
-				.padEnd(4, '_'); // ensures at least 4 chars
+				.padEnd(4, "_"); // ensures at least 4 chars
 
 			const first = shardKey[0];
 			const prefix = shardKey.slice(0, 3);
 			const shard = shardKey[3];
 
 			const folderPath = normalizePath(
-				`Worter/Ordered/${first}/${prefix}/${shard}`
+				`Worter/Ordered/${first}/${prefix}/${shard}`,
 			);
 
-			console.log('folderPath before', folderPath);
+			console.log("folderPath before", folderPath);
 			const folder = await ensureFolderExists(vault, folderPath);
-			console.log('folderPath after', folder, folder?.path);
+			console.log("folderPath after", folder, folder?.path);
 
-			const cleanFileName = originalName.replace(/[\\/:*?"<>|]/g, '');
+			const cleanFileName = originalName.replace(/[\\/:*?"<>|]/g, "");
 			filePath = `${folder.path}/${cleanFileName}.md`;
 
 			const normalizedPath = normalizePath(filePath);
@@ -105,10 +105,10 @@ export async function getExisingOrCreatedFileInWorterDir(
 
 async function ensureFolderExists(
 	vault: Vault,
-	folderPath: string
+	folderPath: string,
 ): Promise<TFolder> {
-	const segments = folderPath.split('/').filter(Boolean);
-	let currentPath = '';
+	const segments = folderPath.split("/").filter(Boolean);
+	let currentPath = "";
 	let currentFolder: TFolder | null = vault.getRoot();
 
 	for (const segment of segments) {
@@ -121,7 +121,7 @@ async function ensureFolderExists(
 			try {
 				currentFolder = await vault.createFolder(currentPath);
 			} catch (err: any) {
-				if (err.message.includes('already exists')) {
+				if (err.message.includes("already exists")) {
 					// race condition: folder was created in parallel
 					currentFolder = vault.getAbstractFileByPath(currentPath) as TFolder;
 				} else {
@@ -143,20 +143,20 @@ async function ensureFolderExists(
 export async function ensureFileExists(
 	vault: Vault,
 	filePath: string,
-	defaultContent = ''
+	defaultContent = "",
 ): Promise<TFile> {
 	const normalizedPath = normalizePath(filePath);
 	let file = vault.getAbstractFileByPath(normalizedPath);
 
 	if (file instanceof TFile) return file;
 
-	const folderPath = normalizedPath.split('/').slice(0, -1).join('/');
+	const folderPath = normalizedPath.split("/").slice(0, -1).join("/");
 	await ensureFolderExists(vault, folderPath);
 
 	try {
 		await vault.create(normalizedPath, defaultContent);
 	} catch (err: any) {
-		if (!err.message.includes('already exists')) {
+		if (!err.message.includes("already exists")) {
 			throw err;
 		}
 		// race condition: another process created it first

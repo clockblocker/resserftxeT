@@ -1,101 +1,101 @@
-import { z } from 'zod/v4';
+import { z } from "zod/v4";
 
-const VergleichsformSchema = z.enum(['Positiv', 'Komparativ', 'Superlativ']);
+const VergleichsformSchema = z.enum(["Positiv", "Komparativ", "Superlativ"]);
 const VerbFormTagSchema = z.enum([
-	'Praesens',
-	'Praeteritum',
-	'Perfekt',
-	'Imperativ',
-	'KI',
-	'KII',
-	'PI',
-	'PII',
-	'ZuInfinitiv',
+	"Praesens",
+	"Praeteritum",
+	"Perfekt",
+	"Imperativ",
+	"KI",
+	"KII",
+	"PI",
+	"PII",
+	"ZuInfinitiv",
 ]);
 
 // VerbFormTagSchema = z.record(VerbFormTagSchema, z.array(z.string())); // [ich,du,er,wir,ihr,sie]
 
-const ConjugationSchema = z.enum(['Stark', 'Schwach', 'Gemischt']);
-const AdjektivDeklinationSchema = z.enum(['Stark', 'Schwach', 'Gemischt']);
+const ConjugationSchema = z.enum(["Stark", "Schwach", "Gemischt"]);
+const AdjektivDeklinationSchema = z.enum(["Stark", "Schwach", "Gemischt"]);
 
 // ---
 
-const KasusSchema = z.enum(['N', 'G', 'D', 'A']); // ["Nominativ", "Genitiv", "Dativ", "Akkusativ"]
+const KasusSchema = z.enum(["N", "G", "D", "A"]); // ["Nominativ", "Genitiv", "Dativ", "Akkusativ"]
 
-const NomenDeklinationSchema = z.enum(['Stark', 'Schwach', 'Gemischt']);
+const NomenDeklinationSchema = z.enum(["Stark", "Schwach", "Gemischt"]);
 const RegelmaessigSchema = z.boolean(); // "Regelmaessig", "Unregelmaessig"
 
-const TrennbarkeitSchema = z.enum(['Trennbar', 'Untrennbar']);
+const TrennbarkeitSchema = z.enum(["Trennbar", "Untrennbar"]);
 
 const AdverbCategorySchema = z.enum([
-	'Lokal',
-	'Temporal',
-	'Modal',
-	'Kausal',
-	'Grad',
+	"Lokal",
+	"Temporal",
+	"Modal",
+	"Kausal",
+	"Grad",
 ]);
-const ArtikelTypeSchema = z.enum(['Bestimmt', 'Unbestimmt']);
+const ArtikelTypeSchema = z.enum(["Bestimmt", "Unbestimmt"]);
 const PartikelTypeSchema = z.enum([
-	'Intensität',
-	'Fokus',
-	'Negation',
-	'Abtönung',
-	'Konnektiv',
+	"Intensität",
+	"Fokus",
+	"Negation",
+	"Abtönung",
+	"Konnektiv",
 ]);
 const NumeraleTypeSchema = z.enum([
-	'Grundzahl',
-	'Ordnungszahl',
-	'Bruchzahl',
-	'Multiplikativ',
-	'Kollektiv',
+	"Grundzahl",
+	"Ordnungszahl",
+	"Bruchzahl",
+	"Multiplikativ",
+	"Kollektiv",
 ]);
-const KonjunktionTypeSchema = z.enum(['Koordinierend', 'Subordinierend']);
+const KonjunktionTypeSchema = z.enum(["Koordinierend", "Subordinierend"]);
 
 const GoverningPrepositionSchema = z.enum([
-	'an',
-	'auf',
-	'bei',
-	'bis',
-	'durch',
-	'für',
-	'gegen',
-	'in',
-	'mit',
-	'nach',
-	'ohne',
-	'um',
-	'unter',
-	'von',
-	'vor',
-	'während',
-	'wegen',
-	'trotz',
-	'innerhalb',
-	'außerhalb',
-	'entlang',
-	'mithilfe',
-	'seit',
-	'über',
-	'als',
+	"an",
+	"auf",
+	"bei",
+	"bis",
+	"durch",
+	"für",
+	"gegen",
+	"in",
+	"mit",
+	"nach",
+	"ohne",
+	"um",
+	"unter",
+	"von",
+	"vor",
+	"während",
+	"wegen",
+	"trotz",
+	"innerhalb",
+	"außerhalb",
+	"entlang",
+	"mithilfe",
+	"seit",
+	"über",
+	"als",
 ]);
 
 // ---
-const MatchSchema = z.enum(['Grundform', 'Flexion', 'Tippfehler', 'Unbekannt']);
+const MatchSchema = z.enum(["Grundform", "Flexion", "Tippfehler", "Unbekannt"]);
 
-const GenusSchema = z.enum(['F', 'M', 'N']); // ["Feminin", "Maskulin", "Neutrum"]
+const GenusSchema = z.enum(["F", "M", "N"]); // ["Feminin", "Maskulin", "Neutrum"]
 
 const PronomenTypeSchema = z.enum([
-	'Possessiv',
-	'Reflexiv',
-	'Personal',
-	'Generalisierendes',
-	'Demonstrativ',
-	'W-Pronomen',
-	'Indefinit',
-	'Quantifikativ',
+	"Possessiv",
+	"Reflexiv",
+	"Personal",
+	"Generalisierendes",
+	"Demonstrativ",
+	"W-Pronomen",
+	"Indefinit",
+	"Quantifikativ",
 ]);
 
-const NumerusSchema = z.enum(['Einzahl', 'Mehrzahl']);
+const NumerusSchema = z.enum(["Einzahl", "Mehrzahl"]);
 
 const CommonGrundformsFeildsSchema = z.object({
 	grundform: z.string(),
@@ -103,20 +103,20 @@ const CommonGrundformsFeildsSchema = z.object({
 });
 
 const WortartSchema = z.enum([
-	'Nomen',
-	'Pronomen',
-	'Verb',
-	'Adjektiv',
-	'Adverb',
-	'Artikel',
-	'Partikel',
-	'Praeposition',
-	'Konjunktion',
-	'Numerale',
-	'Praefix',
-	'Redewendung',
-	'Interjektion',
-	'Unbekannt',
+	"Nomen",
+	"Pronomen",
+	"Verb",
+	"Adjektiv",
+	"Adverb",
+	"Artikel",
+	"Partikel",
+	"Praeposition",
+	"Konjunktion",
+	"Numerale",
+	"Praefix",
+	"Redewendung",
+	"Interjektion",
+	"Unbekannt",
 ]);
 
 const NomenGrundformSchema = z.object({
@@ -195,7 +195,7 @@ const UnbekanntGrundformSchema = z.object({
 	...CommonGrundformsFeildsSchema.shape,
 });
 
-const GrundformSchema = z.discriminatedUnion('wortart', [
+const GrundformSchema = z.discriminatedUnion("wortart", [
 	NomenGrundformSchema,
 	PronomenGrundformSchema,
 	VerbGrundformSchema,
@@ -221,34 +221,34 @@ const grundformsOutputSchema = z
 	.or(
 		z.object({
 			[MatchSchema.enum.Grundform]: GrundformSchema.array(),
-		})
+		}),
 	)
 	.or(
 		z.object({
 			[MatchSchema.enum.Flexion]: GrundformSchema.array(),
-		})
+		}),
 	)
 	.or(
 		z.object({
 			[MatchSchema.enum.Tippfehler]: GrundformSchema.array(),
-		})
+		}),
 	)
 	.or(
 		z.object({
 			[MatchSchema.enum.Unbekannt]: UnbekanntGrundformSchema.array(),
-		})
+		}),
 	);
 
 // ---
 
 const MorphemSchema = z.enum([
-	'Zirkumfix',
-	'Konversion',
-	'Praefix',
-	'Suffix',
-	'Stamm',
-	'Endung',
-	'Fugenelement',
+	"Zirkumfix",
+	"Konversion",
+	"Praefix",
+	"Suffix",
+	"Stamm",
+	"Endung",
+	"Fugenelement",
 ]);
 
 const morphemAnalysisOutputSchema = z.object({
@@ -257,7 +257,7 @@ const morphemAnalysisOutputSchema = z.object({
 });
 
 const SteigerungsfaehigSchema = z.boolean(); // "Steigerungsfaehig", "Unsteigerungsfaehig"
-const VergleichsgradSchema = z.enum(['Positiv', 'Komparativ', 'Superlativ']);
+const VergleichsgradSchema = z.enum(["Positiv", "Komparativ", "Superlativ"]);
 
 const adjektivOutputSchema = z.array(
 	z.object({
@@ -268,7 +268,7 @@ const adjektivOutputSchema = z.array(
 		}),
 		regelmaessig: RegelmaessigSchema,
 		steigerungsfaehig: SteigerungsfaehigSchema,
-	})
+	}),
 );
 
 export {

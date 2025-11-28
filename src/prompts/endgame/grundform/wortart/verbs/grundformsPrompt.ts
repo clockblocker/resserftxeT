@@ -1,6 +1,6 @@
-import { z } from 'zod/v4';
-import { tests } from './tests';
-import { grundformsOutputSchema } from 'prompts/endgame/zod/schemas';
+import { grundformsOutputSchema } from "prompts/endgame/zod/schemas";
+import { z } from "zod/v4";
+import { tests } from "./tests";
 
 export const makeGrundformsPrompt = () => {
 	const instructions = `<agent_background>
@@ -191,17 +191,17 @@ const grundformsOutputSchema = z.array(GrundformSchema);
 	const validationResult = testsSchema.safeParse(tests);
 
 	if (!validationResult.success) {
-		console.error('Validation error:', validationResult.error);
-		return '';
+		console.error("Validation error:", validationResult.error);
+		return "";
 	} else {
 		const examplesXML = `<examples>${Object.entries(tests)
 			.map(
 				([key, value]) =>
 					`<example><note>${key.toLowerCase().trim()}</note><grundforms>${JSON.stringify(
-						value
-					)}</grundforms></example>`
+						value,
+					)}</grundforms></example>`,
 			)
-			.join('')}</examples>`;
+			.join("")}</examples>`;
 		return instructions + schema + examplesXML;
 	}
 };

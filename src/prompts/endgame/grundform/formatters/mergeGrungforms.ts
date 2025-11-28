@@ -1,4 +1,4 @@
-import { Grundform, Wortart } from 'prompts/endgame/zod/types';
+import { type Grundform, Wortart } from "prompts/endgame/zod/types";
 
 function keyFromGrundform<G extends Grundform>(g: G) {
 	if (g.wortart === Wortart.Nomen) {
@@ -14,7 +14,7 @@ export function mergeGrundforms<G extends Grundform>(grundforms: G[]): G[] {
 		grundforms.map((g) => [
 			keyFromGrundform(g),
 			{ ...g, emojiBeschreibungs: [] as string[] },
-		])
+		]),
 	);
 	for (const g of grundforms) {
 		const k = keyFromGrundform(g);

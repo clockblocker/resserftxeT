@@ -1,6 +1,6 @@
-import { z } from 'zod/v4';
-import { tests } from './tests';
-import { grundformsOutputSchema } from 'prompts/endgame/zod/schemas';
+import { grundformsOutputSchema } from "prompts/endgame/zod/schemas";
+import { z } from "zod/v4";
+import { tests } from "./tests";
 
 // <agent_role>
 //   Your task is to help the student navigate the German language. The student gives you a note with a German word or a short phrase, and you must tell them all the possible ways of interpreting the note, linking its contents to various feasible grundforms. Your student is not yet the master on the language, so his notes might contain mistakes.
@@ -199,17 +199,17 @@ z.object({ // This shall be a priority. We need to find every walid way to inter
 	const validationResult = testsSchema.safeParse(tests);
 
 	if (!validationResult.success) {
-		console.error('Validation error:', validationResult.error);
-		return '';
+		console.error("Validation error:", validationResult.error);
+		return "";
 	} else {
 		const examplesXML = `<examples>${Object.entries(tests)
 			.map(
 				([key, value]) =>
 					`<example><note>${key.toLowerCase().trim()}</note><grundforms>${JSON.stringify(
-						value
-					)}</grundforms></example>`
+						value,
+					)}</grundforms></example>`,
 			)
-			.join('')}</examples>`;
+			.join("")}</examples>`;
 		return instructions + schema + examplesXML;
 	}
 };

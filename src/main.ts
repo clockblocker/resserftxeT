@@ -1,16 +1,16 @@
-import { Editor, MarkdownView, Notice, Plugin } from 'obsidian';
-import { SettingsTab } from './settings';
-import { DEFAULT_SETTINGS, TextEaterSettings } from './types';
-import { ApiService } from './api';
-import { FileService } from './file';
-import fillTemplate from './commands/fillTemplate';
-import getInfinitiveAndEmoji from './commands/getInfinitiveAndEmoji';
-import normalizeSelection from './commands/normalizeSelection';
-import translateSelection from './commands/translateSelection';
-import formatSelectionWithNumber from './commands/formatSelectionWithNumber';
-import addBacklinksToCurrentFile from './commands/addBacklinksToCurrentFile';
-import insertReplyFromKeymaker from './commands/insertReplyFromC1Richter';
-import insertReplyFromC1Richter from './commands/insertReplyFromC1Richter';
+import { type Editor, type MarkdownView, Notice, Plugin } from "obsidian";
+import { ApiService } from "./api";
+import addBacklinksToCurrentFile from "./commands/addBacklinksToCurrentFile";
+import fillTemplate from "./commands/fillTemplate";
+import formatSelectionWithNumber from "./commands/formatSelectionWithNumber";
+import getInfinitiveAndEmoji from "./commands/getInfinitiveAndEmoji";
+import insertReplyFromKeymaker from "./commands/insertReplyFromC1Richter";
+import insertReplyFromC1Richter from "./commands/insertReplyFromC1Richter";
+import normalizeSelection from "./commands/normalizeSelection";
+import translateSelection from "./commands/translateSelection";
+import { FileService } from "./file";
+import { SettingsTab } from "./settings";
+import { DEFAULT_SETTINGS, type TextEaterSettings } from "./types";
 
 export default class TextEaterPlugin extends Plugin {
 	settings: TextEaterSettings;
@@ -22,7 +22,7 @@ export default class TextEaterPlugin extends Plugin {
 			await this.loadPlugin();
 			this.addSettingTab(new SettingsTab(this.app, this));
 		} catch (error) {
-			console.error('Error during plugin initialization:', error);
+			console.error("Error during plugin initialization:", error);
 			new Notice(`Plugin failed to load: ${error.message}`);
 		}
 	}
@@ -33,12 +33,12 @@ export default class TextEaterPlugin extends Plugin {
 		this.fileService = new FileService(this.app, this.app.vault);
 
 		this.addCommand({
-			id: 'backlink-all-to-current-file',
-			name: 'Populate all referenced files with a backlink to the current file',
+			id: "backlink-all-to-current-file",
+			name: "Populate all referenced files with a backlink to the current file",
 			editorCheckCallback: (
 				checking: boolean,
 				editor: Editor,
-				view: MarkdownView
+				view: MarkdownView,
 			) => {
 				const fileName = view.file?.name;
 				const backlink = view.file?.basename;
@@ -50,7 +50,7 @@ export default class TextEaterPlugin extends Plugin {
 							backlink,
 							this.app.vault,
 							this.app.metadataCache,
-							editor
+							editor,
 						);
 					}
 					return true;
@@ -61,12 +61,12 @@ export default class TextEaterPlugin extends Plugin {
 		});
 
 		this.addCommand({
-			id: 'fill-template',
-			name: 'Generate a dictionary entry for the word in the title of the file',
+			id: "fill-template",
+			name: "Generate a dictionary entry for the word in the title of the file",
 			editorCheckCallback: (
 				checking: boolean,
 				editor: Editor,
-				view: MarkdownView
+				view: MarkdownView,
 			) => {
 				if (view.file) {
 					if (!checking) {
@@ -80,12 +80,12 @@ export default class TextEaterPlugin extends Plugin {
 		});
 
 		this.addCommand({
-			id: 'get-infinitive-and-emoji',
-			name: 'Get infinitive/normal form and emoji for current word',
+			id: "get-infinitive-and-emoji",
+			name: "Get infinitive/normal form and emoji for current word",
 			editorCheckCallback: (
 				checking: boolean,
 				editor: Editor,
-				view: MarkdownView
+				view: MarkdownView,
 			) => {
 				if (view.file) {
 					if (!checking) {
@@ -98,12 +98,12 @@ export default class TextEaterPlugin extends Plugin {
 		});
 
 		this.addCommand({
-			id: 'duplicate-selection',
-			name: 'Add links to normal/inf forms to selected text',
+			id: "duplicate-selection",
+			name: "Add links to normal/inf forms to selected text",
 			editorCheckCallback: (
 				checking: boolean,
 				editor: Editor,
-				view: MarkdownView
+				view: MarkdownView,
 			) => {
 				const selection = editor.getSelection();
 				if (selection && view.file) {
@@ -117,8 +117,8 @@ export default class TextEaterPlugin extends Plugin {
 		});
 
 		this.addCommand({
-			id: 'translate-selection',
-			name: 'Translate selected text',
+			id: "translate-selection",
+			name: "Translate selected text",
 			editorCheckCallback: (checking: boolean, editor: Editor) => {
 				const selection = editor.getSelection();
 				if (selection) {
@@ -132,12 +132,12 @@ export default class TextEaterPlugin extends Plugin {
 		});
 
 		this.addCommand({
-			id: 'format-selection-with-number',
-			name: 'Split selection into linked blocks',
+			id: "format-selection-with-number",
+			name: "Split selection into linked blocks",
 			editorCheckCallback: (
 				checking: boolean,
 				editor: Editor,
-				view: MarkdownView
+				view: MarkdownView,
 			) => {
 				const selection = editor.getSelection();
 				if (selection && view.file) {
@@ -151,8 +151,8 @@ export default class TextEaterPlugin extends Plugin {
 		});
 
 		this.addCommand({
-			id: 'check-ru-de-translation',
-			name: 'Keymaker',
+			id: "check-ru-de-translation",
+			name: "Keymaker",
 			editorCheckCallback: (checking: boolean, editor: Editor) => {
 				const selection = editor.getSelection();
 				if (selection) {
@@ -166,8 +166,8 @@ export default class TextEaterPlugin extends Plugin {
 		});
 
 		this.addCommand({
-			id: 'check-schriben',
-			name: 'Schriben check',
+			id: "check-schriben",
+			name: "Schriben check",
 			editorCheckCallback: (checking: boolean, editor: Editor) => {
 				const selection = editor.getSelection();
 				if (selection) {
@@ -194,7 +194,7 @@ export default class TextEaterPlugin extends Plugin {
 		if (!matches) return 0;
 
 		const numbers = matches.map((match) => {
-			const num = match.replace('#^', '');
+			const num = match.replace("#^", "");
 			return parseInt(num, 10);
 		});
 
