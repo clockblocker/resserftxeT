@@ -4,6 +4,7 @@ import {
 	Notice,
 	TFile,
 	type Vault,
+	type LinkCache,
 } from "obsidian";
 import {
 	appendToExistingFile,
@@ -20,7 +21,30 @@ export default async function addBacklinksToCurrentFile(
 ) {
 	try {
 		const fileCache = metadataCache.getFileCache(file);
-		const links = fileCache?.links ?? [];
+		const fileContent = await vault.read(file);
+		
+		let firstSlitLineIndex = null;
+		let secondSlitLineIndex = null;
+
+		for (const [index, line] of fileContent.split("\n").entries()) {
+			if (line.startsWith("---")) {
+				if (firstSlitLineIndex === null) {
+					firstSlitLineIndex = index;
+					continue;
+				} else if (secondSlitLineIndex === null) {
+					secondSlitLineIndex = index;
+					break;
+				}
+			}
+		}
+
+
+		let links = fileCache?.links ?? [];
+
+		if (firstSlitLineIndex !== null && secondSlitLineIndex !== null) {
+			links = links.filter((link) => link.position.start.line < firstSlitLineIndex || link.position.start.line > secondSlitLineIndex);
+		}
+
 		const rawLinks = new Set(links.map(({ link }) => link));
 
 		const resolvedPaths: { name: string; path: string | null }[] = [];
