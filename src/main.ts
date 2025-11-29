@@ -88,6 +88,13 @@ export default class TextEaterPlugin extends Plugin {
 				editor: Editor,
 				view: MarkdownView,
 			) => {
+				const selection = editor.getSelection();
+				if (selection && view.file) {
+					if (!checking) {
+						getInfinitiveFromSelection(this, editor, selection);
+					}
+					return true;
+				}
 				if (view.file) {
 					if (!checking) {
 						getInfinitiveFromFilename(this, view.file);
