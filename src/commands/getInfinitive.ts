@@ -1,6 +1,7 @@
 import { type Editor, Notice, type TFile } from "obsidian";
 import type TextEaterPlugin from "../main";
 import z from "zod";
+import { prompts } from "prompts";
 
 export async function getInfinitiveFromFilename(
 	plugin: TextEaterPlugin,
@@ -38,10 +39,14 @@ async function getInfinitive(
 	};
 
 	try {
-		const response = await plugin.apiService.determineInfinitive(text);
+		const response = await plugin.newApiService.generate({
+			systemPrompt: prompts.infinitive_hebrew,
+			userInput: text,
+			schema: z.string(),
+			withCache: false,
+		});
 
 		const parsed = JSON.parse(response);
-		console.log(parsed);
 
 		const parsedResponse = hebPartsSchema.safeParse(parsed);
 		if (!parsedResponse.success) {
