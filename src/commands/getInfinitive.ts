@@ -37,13 +37,14 @@ async function getInfinitive(
 	};
 
 	try {
-		const response = await plugin.newApiService.generate({
+		const rawResponse = await plugin.newApiService.generate({
 			systemPrompt: prompts.infinitive_hebrew,
 			userInput: text,
 			schema: z.string(),
 			withCache: false,
 		});
 
+		const response = rawResponse.replaceAll("javascript", "").replaceAll("```", "").replaceAll("\n", "").replace(/^\n+/, "").replaceAll('json', '').trim()
 		const parsed = JSON.parse(response);
 
 		const parsedResponse = hebPartsSchema.safeParse(parsed);
