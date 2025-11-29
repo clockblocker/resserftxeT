@@ -45,11 +45,7 @@ For multiple senses, separate complete headwords with “ | ”.
 
 ---
 
-### **Block 2 — Forms**
-List:
-- The user-provided surface form (exact spelling),  
-- Optionally other major forms (plural, definite, construct).  
-If there are multiple senses, align them with “ | ”.
+### **Block 2 — Empty block for user contexts**
 
 ---
 

@@ -104,7 +104,7 @@ export class ApiService {
 			word,
 		);
 
-		const response = rawResponse.replaceAll("```javascript", "").replaceAll("```", "").replaceAll("\n", "").replace(/^\n+/, "").trim()
+		const response = rawResponse.replaceAll("javascript", "").replaceAll("```", "").replaceAll("\n", "").replace(/^\n+/, "").replaceAll('json', '').trim()
 		return response;
 	}
 

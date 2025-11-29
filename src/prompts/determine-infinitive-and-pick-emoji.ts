@@ -12,7 +12,7 @@ No explanations. No comments. No extra text. No md block quotes.
 <instructions>
 
 1. OUTPUT FORMAT
-- Responce Schema: z.array(z.array(z.object({ surf: z.string(), lem: z.string() })));
+- Response Schema: z.array(z.array(z.object({ surf: z.string(), lem: z.string() })));
 - Outer array = sequence of words.
 - Inner array = ordered morphemes of that word.
 - Ignore punctuation entirely: it separates words but is NOT returned.
@@ -28,12 +28,12 @@ No explanations. No comments. No extra text. No md block quotes.
 ---
 
 3. LEMMA RULES ("lem")
-- Always fully vocalized.
+- Always fully vocalized (including clitic affixes).
 - Nouns / adjectives / participles → masculine singular absolute lemma.
 - Verbs → fully vocalized **3rd person masculine singular past form** (as in הִגִּיעַ), NOT the infinitive.
 - Construct-state surfaces map to absolute lemmas.
-- Prefix clitic lemmas end with maqaf: ה־, ו־, ב־, כ־, ל־, מִ־, שֶ־
-- Suffix clitic lemmas begin with maqaf: ־י, ־ו, ־הּ, ־ם, ־נוּ, ־ךְ, ־כם, etc.
+- Prefix clitic lemmas end with maqaf and are fully vocalized in a default dictionary form, e.g.: הַ־, וְ־, בְּ־, כְּ־, לְ־, מִ־, שֶ־
+- Suffix clitic lemmas begin with maqaf and are fully vocalized where applicable, e.g.: ־וֹ, ־ָם, ־ֵנוּ, ־ִי, ־ְךָ, ־ְךְ, ־ְכֶם, ־ְכֶן, etc.
 
 ---
 
@@ -43,11 +43,11 @@ Split **only Hebrew one-letter syntactic clitics**:
 
 4.1. Proclitics (prefixes):
 ה, ו, ב, כ, ל, מ, ש  
-Each becomes its own morpheme with a prefix lemma (e.g., "ו" → "ו־").
+Each becomes its own morpheme with a fully vocalized prefix lemma (e.g., "ו" → "וְ־").
 
 4.2. Enclitics (pronominal suffixes):
 All object/possessive endings: ם, ו, י, ך, כם, כן, נוּ, הּ, ן, etc.  
-Each becomes its own morpheme with a suffix lemma (e.g., "ם" → "־ם").
+Each becomes its own morpheme with a fully vocalized suffix lemma (e.g., "ם" → "־ָם").
 
 4.3. Multiple prefixes:
 If several clitics appear consecutively → split each separately, left → right.
@@ -81,42 +81,42 @@ After removing clitics, treat the base as a single morpheme with its standard vo
 <example>
 <input>הספרים</input>
 <output>
-[[{ "surf": "ה", "lem": "ה־" },{ "surf": "ספרים", "lem": "סֵפֶר" }]]
+[[{ "surf": "ה", "lem": "הַ־" }, { "surf": "ספרים", "lem": "סֵפֶר" }]]
 </output>
 </example>
 
 <example>
 <input>יהודים</input>
 <output>
-[[{ surf: "יהודים", lem: "יְהוּדִי" }]]
+[[{ "surf": "יהודים", "lem": "יְהוּדִי" }]]
 </output>
 </example>
 
 <example>
 <input>שפות</input>
 <output>
-[[{ surf: "שפות", lem: "שָׂפָה" }]]
+[[{ "surf": "שפות", "lem": "שָׂפָה" }]]
 </output>
 </example>
 
 <example>
-<input>שפות</input>
+<input>שָׂפָה</input>
 <output>
-[[{ surf: "שָׂפָה", lem: "שָׂפָה" }]]
+[[{ "surf": "שָׂפָה", "lem": "שָׂפָה" }]]
 </output>
 </example>
 
 <example>
 <input>למנוע</input>
 <output>
-[[{ surf: "ל", lem: "ל־" },{ surf: "מנוע", lem: "מָנוֹעַ" }]]
+[[{ "surf": "ל", "lem": "לְ־" }, { "surf": "מנוע", "lem": "מָנוֹעַ" }]]
 </output>
 </example>
 
 <example>
 <input>כשהגיע</input>
 <output>
-[[{ "surf": "כ", "lem": "כ־" },{ "surf": "ש", "lem": "שֶ־" },{ "surf": "הגיע", "lem": "הִגִּיעַ" }]]
+[[{ "surf": "כ", "lem": "כְּ־" }, { "surf": "ש", "lem": "שֶ־" }, { "surf": "הגיע", "lem": "הִגִּיעַ" }]]
 </output>
 </example>
 
@@ -124,14 +124,14 @@ After removing clitics, treat the base as a single morpheme with its standard vo
 <example>
 <input>שפתם</input>
 <output>
-[[{ "surf": "שפת", "lem": "שָׂפָה" },{ "surf": "ם","lem": "־ם" }]]
+[[{ "surf": "שפת", "lem": "שָׂפָה" }, { "surf": "ם", "lem": "־ָם" }]]
 </output>
 </example>
 
 <example>
 <input>עִבְרִית היא שפה</input>
 <output>
-[[{ "surf": "עִבְרִית", "lem": "עִבְרִית" }],[{ "surf": "היא", "lem": "הִיא" }],[{ "surf": "שפה", "lem": "שָׂפָה" }]]
+[[{ "surf": "עִבְרִית", "lem": "עִבְרִית" }], [{ "surf": "היא", "lem": "הִיא" }], [{ "surf": "שפה", "lem": "שָׂפָה" }]]
 </output>
 </example>
 
@@ -146,8 +146,7 @@ After removing clitics, treat the base as a single morpheme with its standard vo
 <input>
 עִבְרִית היא שפה שמית, ממשפחת השפות האפרו־אסייתיות, הידועה כשפתם של היהודים ושל השומרונים.</input>
 <output>
-[[{ surf: "עִבְרִית", lem: "עִבְרִית" }],[{ surf: "היא", lem: "הִיא" }],[{ surf: "שפה", lem: "שָׂפָה" }],[{ surf: "שמית", lem: "שֵׁמִי" }],[{ surf: "מ", lem: "מִ־" },{ surf: "משפחת", lem: "מִשְׁפָּחָה" }],[{ surf: "ה", lem: "ה־" },{ surf: "שפות", lem: "שָׂפָה" }],[{ surf: "ה", lem: "ה־" },{ surf: "אפרו־אסייתיות", lem: "אַפְרוֹ־אַסְיָתִי" }],[{ surf: "ה", lem: "ה־" },{ surf: "ידועה", lem: "יָדוּעַ" }],[{ surf: "כ", lem: "כ־" },{ surf: "שפת", lem: "שָׂפָה" },{ surf: "ם", lem: "־ם" }],[{ surf: "של", lem: "שֶׁל" }],[{ surf: "ה", lem: "ה־" },{ surf: "יהודים", lem: "יְהוּדִי" }],[{ surf: "ו", lem: "ו־" },{ surf: "של", lem: "שֶׁל" }],[{ surf: "ה", lem: "ה־" },{ surf: "שומרונים", lem: "שׁוֹמְרוֹנִי" }]]
+[[{ surf: "עִבְרִית", lem: "עִבְרִית" }],[{ surf: "היא", lem: "הִיא" }],[{ surf: "שפה", lem: "שָׂפָה" }],[{ surf: "שמית", lem: "שֵׁמִי" }],[{ surf: "מ", lem: "מִ־" },{ surf: "משפחת", lem: "מִשְׁפָּחָה" }],[{ surf: "ה", lem: "הַ־" },{ surf: "שפות", lem: "שָׂפָה" }],[{ surf: "ה", lem: "הַ־" },{ surf: "אפרו־אסייתיות", lem: "אַפְרוֹ־אַסְיָתִי" }],[{ surf: "ה", lem: "הַ־" },{ surf: "ידועה", lem: "יָדוּעַ" }],[{ surf: "כ", lem: "כְּ־" },{ surf: "שפת", lem: "שָׂפָה" },{ surf: "ם", lem: "־ָם" }],[{ surf: "של", lem: "שֶׁל" }],[{ surf: "ה", lem: "ה־" },{ surf: "יהודים", lem: "יְהוּדִי" }],[{ surf: "ו", lem: "וְ־" },{ surf: "של", lem: "שֶׁל" }],[{ surf: "ה", lem: "הַ־" },{ surf: "שומרונים", lem: "שׁוֹמְרוֹנִי" }]]
 </output>
 </example>
-</examples>
-`
+</examples>`;
