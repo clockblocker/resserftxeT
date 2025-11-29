@@ -22,8 +22,6 @@ export async function getInfinitiveFromSelection(
 
 	await navigator.clipboard.writeText(`${res}`);
 	editor.replaceSelection(`${res}`);
-
-	await plugin.fileService.writeToOpenedFile(` ${res} \n`);
 }
 
 
