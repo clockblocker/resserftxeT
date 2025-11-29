@@ -19,6 +19,7 @@ No explanations, no reasoning, no meta-text.
 
    - If input is fully vowelized and is the canonical form → use as-is.
    - If input contains syntactic clitics (ה־, ו־, ב־, ל־, כ־, מ־, ש־ or ־ם, ־ו, ־י, ־ך, ־נוּ, etc.) → strip them before identifying the lexical base.
+   - If input contains itself a syntactic clitic, keep it as is (with "־" before/after it).
    - If input is a declined form (plural, definite, construct) → map to the **absolute singular**.
    - **Plural-only lexemes** (e.g., מַיִם, שָׁמַיִם) → canonical form remains the plural dictionary form.
    - **Irregular plurals with distinct singulars** (e.g., נשים → אִשָּׁה) → use the standard dictionary singular as the canonical form.
@@ -230,6 +231,32 @@ their / them (masc. plural)
 ---
   </agent_output>
 </example>
+
+<example>
+  <hebrew_word>ה־</hebrew_word>
+  <agent_output>
+📎 [[ה־]], [ha]  
+
+---
+
+
+---
+= [[הַיְּדִיעָה]]  
+≈ [[וְ־]], [[כְּ־]], [[בְּ־]], [[לְ־]]  
+≠ 
+
+---
+the (definite article)  
+определённый артикль «ha-»
+
+---
+[[הַ־]], [[הַיְּדִיעָה]], [[בַּ־]], [[לַ־]]
+
+---
+  </agent_output>
+</example>
+
+
 
 </examples>
 `;
