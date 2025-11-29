@@ -19,7 +19,7 @@ No explanations, no reasoning, no meta-text.
 
    - If input is fully vowelized and is the canonical form → use as-is.
    - If input contains syntactic clitics (ה־, ו־, ב־, ל־, כ־, מ־, ש־ or ־ם, ־ו, ־י, ־ך, ־נוּ, etc.) → strip them before identifying the lexical base.
-   - If input contains itself a syntactic clitic, keep it as is (with "־" before/after it).
+   - If the input *is itself a syntactic clitic*, the canonical form **is the clitic**, **fully vowelized**, with its maqaf.
    - If input is a declined form (plural, definite, construct) → map to the **absolute singular**.
    - **Plural-only lexemes** (e.g., מַיִם, שָׁמַיִם) → canonical form remains the plural dictionary form.
    - **Irregular plurals with distinct singulars** (e.g., נשים → אִשָּׁה) → use the standard dictionary singular as the canonical form.
@@ -28,6 +28,18 @@ No explanations, no reasoning, no meta-text.
    - **Participles** → map to their infinitive.
    - **Verbs** → infinitive with ל־, fully vowelized.
    - When producing the canonical fully vowelized form, **restore correct בּ/כּ/דּ/גּ/כּ/פּ/תּ (dagesh in בג״ד כפ״ת)** according to standard lexical spelling.
+   - **AFFIX RULE: All clitic affixes must also be fully vowelized**, e.g.:
+        - הַ־  
+        - וְ־  
+        - לְ־  
+        - כְּ־  
+        - בְּ־  
+        - מִ־  
+        - שֶ־  
+        - ־ָם  
+        - ־וֹ  
+        - ־ֵנוּ  
+        - ־ִי  
    - If multiple distinct senses exist, create parallel entries separated by “ | ” and keep them aligned across all blocks.
 
 ---
@@ -39,9 +51,11 @@ Your output must be structured into **blocks separated by a line containing exac
 ### **Block 1 — Headword line**
 One line.  
 Format:  
-${s}[emoji] [[canonical_form]], [IPA] #gender_tag${s}  
-Gender tag appears only for nouns and adjectives (#זכר / #נקבה / #דו־מגדרי).  
-For multiple senses, separate complete headwords with “ | ”.
+${s}[emoji] [[canonical_form]], [[unvowelized_form]] [IPA] #gender_tag${s}  
+- The unvowelized form = the same lemma stripped of niqqud.  
+- Wrapped in Obsidian-style wikilinks.  
+- Gender tag appears only for nouns and adjectives (#זכר / #נקבה / #דו־מגדרי).  
+- For multiple senses, separate complete headwords with “ | ”.
 
 ---
 
@@ -80,6 +94,7 @@ Align multiple senses with “ | ”.
 3. <formatting_rules>
 
 - ALWAYS use the canonical **fully vowelized** form in the headword.  
+- ALWAYS include a **fully unvowelized wikilink variant** after the canonical form.  
 - ALWAYS include IPA.  
 - Emojis are required for each sense.  
 - Hebrew is normally uncapitalized except proper names.  
@@ -94,7 +109,7 @@ Align multiple senses with “ | ”.
 <example>
 <hebrew_word>האפרו־אסייתיות</hebrew_word>
 <agent_output>
-🌍 [[אַפְרוֹ־אַסְיָתִי]], [afʁo-asjaˈti] #זכר
+🌍 [[אַפְרוֹ־אַסְיָתִי]], [[אפרו־אסייתי]] [afʁo-asjaˈti] #זכר
 
 ---
 
@@ -108,21 +123,20 @@ Afro-Asiatic
 афро-азиатский
 
 ---
-
----
+[[אַפְרוֹ־אַסְיָתִי]]
 </agent_output>
 </example>
 
 <example>
 <hebrew_word>מילים</hebrew_word>
 <agent_output>
-📝 [[מִלָּה]], [miˈla] #נקבה
+📝 [[מִלָּה]], [[מילה]] [miˈla] #נקבה
 
 ---
 
 ---
 = [[תֵּבָה]]  
-≈ [[שָׂפָה]], [[דִּיבּוּר]]  
+≈ [[שָׂפָה]], [[דִּיבּוּר]]  
 ≠ [[שְׁתִיקָה]]
 
 ---
@@ -131,15 +145,13 @@ word
 
 ---
 [[מִלּוֹן]], [[מִלּוּלִי]], [[מִלִּים נִרְדָּפוֹת]]
-
----
 </agent_output>
 </example>
 
 <example>
 <hebrew_word>הספרים</hebrew_word>
 <agent_output>
-📘 [[סֵפֶר]], [ˈsefer] #זכר
+📘 [[סֵפֶר]], [[ספר]] [ˈsefer] #זכר
 
 ---
 
@@ -154,15 +166,13 @@ book
 
 ---
 [[סוֹפֵר]], [[סִפְרִיָּה]], [[סִפְרוּת]]
-
----
 </agent_output>
 </example>
 
 <example>
 <hebrew_word>שומרוני</hebrew_word>
 <agent_output>
-🕎 [[שׁוֹמְרוֹנִי]], [ʃomʁoˈni] #זכר
+🕎 [[שׁוֹמְרוֹנִי]], [[שומרוני]] [ʃomʁoˈni] #זכר
 
 ---
 
@@ -177,15 +187,13 @@ Samaritan
 
 ---
 [[שׁוֹמְרוֹן]], [[שׁוֹמְרוֹנִים]], [[דָּת שׁוֹמְרוֹנִית]]
-
----
 </agent_output>
 </example>
 
 <example>
 <hebrew_word>כתבנו</hebrew_word>
 <agent_output>
-✍️ [[לִכְתּוֹב]], [liχˈtov]
+✍️ [[לִכְתּוֹב]], [[לכתוב]] [liχˈtov]
 
 ---
 
@@ -200,20 +208,18 @@ to write
 
 ---
 [[כְּתִיבָה]], [[כָּתוּב]], [[מִכְתָּב]], [[כְּתָבִים]]
-
----
 </agent_output>
 </example>
 
 <example>
-  <hebrew_word>־ם</hebrew_word>
-  <agent_output>
-👥 [[־ָם]], [am]  
+<hebrew_word>־ם</hebrew_word>
+<agent_output>
+👥 [[־ָם]], [[ם]] [am]
 
 ---
 
 ---
-= [[שֶׁלָהֶם]]  
+= [[שֶׁלָהֶם]]  
 ≈ [[סוּפִית]], [[יָחֲסִית]], [[כִּנּוּי גּוּף]]  
 ≠ [[־ִי]], [[־ְךָ]], [[־ָהּ]]
 
@@ -222,19 +228,16 @@ their / them (masc. plural)
 их (м.р., мн.ч.)
 
 ---
-[[כִּנּוּיֵי גּוּף]], [[סוּפִית יַחֲסִית]], [[־ֵנוּ]], [[־ְךָ]], [[־ְךְ]]
-
----
-  </agent_output>
+[[כִּנּוּיֵי גּוּף]], [[סוּפִית יַחֲסִית]], [[־ֵנוּ]], [[־וֹ]]
+</agent_output>
 </example>
 
 <example>
-  <hebrew_word>ה־</hebrew_word>
-  <agent_output>
-📎 [[ה־]], [ha]  
+<hebrew_word>ה־</hebrew_word>
+<agent_output>
+📎 [[הַ־]], [[ה־]] [ha]
 
 ---
-
 
 ---
 = [[הַיְּדִיעָה]]  
@@ -246,13 +249,7 @@ the (definite article)
 определённый артикль «ha-»
 
 ---
-[[הַ־]], [[הַיְּדִיעָה]], [[בַּ־]], [[לַ־]]
-
----
-  </agent_output>
+[[הַ־]], [[בַּ־]], [[לַ־]]
+</agent_output>
 </example>
-
-
-
-</examples>
-`;
+</examples>`;
