@@ -56,9 +56,9 @@ export class FileService {
 		}
 	}
 
-	async writeToOpenedFile(filePath: string, text: string): Promise<void> {
+	async writeToOpenedFile(text: string): Promise<void> {
 		const view = this.app.workspace.getActiveViewOfType(MarkdownView);
-		if (view && view?.file && view?.file?.path === filePath) {
+		if (view) {
 			const editor = view?.editor;
 			if (editor) {
 				editor.replaceRange(text, { line: editor.lineCount(), ch: 0 });

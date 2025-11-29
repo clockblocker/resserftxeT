@@ -108,10 +108,9 @@ export default async function fillTemplate(
 		const normalForm = extractFirstBracketedWord(baseBlock);
 
 		if (normalForm?.toLocaleLowerCase() === word.toLocaleLowerCase()) {
-			await plugin.fileService.writeToOpenedFile(file.path, entrie);
+			await plugin.fileService.writeToOpenedFile(entrie);
 		} else {
 			await plugin.fileService.writeToOpenedFile(
-				file.path,
 				`[[${normalForm}]]`,
 			);
 			await navigator.clipboard.writeText(entrie);

@@ -50,7 +50,6 @@ export async function makeAdjektivBlock(
 			output: generatedAdjektivOutput,
 		});
 		await plugin.fileService.writeToOpenedFile(
-			file.path,
 			"Contact t.me/@clockblocker",
 		);
 		return null;

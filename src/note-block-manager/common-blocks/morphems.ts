@@ -99,7 +99,6 @@ export async function makeMorphemBlock(
 			output: generatedMorphemAnalysisOutput,
 		});
 		await plugin.fileService.writeToOpenedFile(
-			file.path,
 			"Contact t.me/@clockblocker",
 		);
 		return null;

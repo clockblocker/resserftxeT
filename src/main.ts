@@ -3,7 +3,7 @@ import { ApiService } from "./api";
 import addBacklinksToCurrentFile from "./commands/addBacklinksToCurrentFile";
 import fillTemplate from "./commands/fillTemplate";
 import formatSelectionWithNumber from "./commands/formatSelectionWithNumber";
-import getInfinitiveAndEmoji from "./commands/getInfinitiveAndEmoji";
+import {getInfinitiveFromFilename, getInfinitiveFromSelection} from "./commands/getInfinitive";
 import normalizeSelection from "./commands/normalizeSelection";
 import translateSelection from "./commands/translateSelection";
 import { FileService } from "./file";
@@ -87,7 +87,7 @@ export default class TextEaterPlugin extends Plugin {
 			) => {
 				if (view.file) {
 					if (!checking) {
-						getInfinitiveAndEmoji(this, view.file);
+						getInfinitiveFromFilename(this, view.file);
 					}
 					return true;
 				}
@@ -106,7 +106,7 @@ export default class TextEaterPlugin extends Plugin {
 				const selection = editor.getSelection();
 				if (selection && view.file) {
 					if (!checking) {
-						normalizeSelection(this, editor, view.file, selection);
+						getInfinitiveFromSelection(this, editor, selection);
 					}
 					return true;
 				}
