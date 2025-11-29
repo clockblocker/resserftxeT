@@ -9,10 +9,12 @@ import translateSelection from "./commands/translateSelection";
 import { FileService } from "./file";
 import { SettingsTab } from "./settings";
 import { DEFAULT_SETTINGS, type TextEaterSettings } from "./types";
+import { NewApiService } from "commands/new-api-service";
 
 export default class TextEaterPlugin extends Plugin {
 	settings: TextEaterSettings;
 	apiService: ApiService;
+	newApiService: NewApiService;
 	fileService: FileService;
 
 	async onload() {
@@ -29,7 +31,8 @@ export default class TextEaterPlugin extends Plugin {
 		await this.loadSettings();
 		this.apiService = new ApiService(this.settings, this.app.vault);
 		this.fileService = new FileService(this.app, this.app.vault);
-
+		this.newApiService = new NewApiService(this.settings);
+		
 		this.addCommand({
 			id: "backlink-all-to-current-file",
 			name: "Populate all referenced files with a backlink to the current file",
@@ -79,7 +82,7 @@ export default class TextEaterPlugin extends Plugin {
 
 		this.addCommand({
 			id: "get-infinitive-and-emoji",
-			name: "Get infinitive/normal form and emoji for current word",
+			name: "Get infinitive/normal form for title of the file",
 			editorCheckCallback: (
 				checking: boolean,
 				editor: Editor,
@@ -97,7 +100,7 @@ export default class TextEaterPlugin extends Plugin {
 
 		this.addCommand({
 			id: "duplicate-selection",
-			name: "Add links to normal/inf forms to selected text",
+			name: "Add links to normal/inf forms of selected text",
 			editorCheckCallback: (
 				checking: boolean,
 				editor: Editor,

@@ -2,6 +2,8 @@ import { type Editor, Notice, type TFile } from "obsidian";
 import type TextEaterPlugin from "../main";
 import { prompts } from "../prompts";
 import { longDash } from "../utils";
+import z from "zod";
+import fa from "zod/v4/locales/fa.cjs";
 
 function extractFirstBracketedWord(text: string) {
 	const match = text.match(/\[\[([^\]]+)\]\]/);
@@ -81,12 +83,24 @@ export default async function fillTemplate(
 
 	try {
 		const [dictionaryEntry, froms, morphems] = await Promise.all([
-			plugin.apiService.generateContent(
-				prompts.generate_dictionary_entry,
-				word,
-			),
-			plugin.apiService.generateContent(prompts.generate_forms, word),
-			plugin.apiService.generateContent(prompts.morphems, word),
+			plugin.newApiService.generate({
+				systemPrompt: prompts.generate_dictionary_entry,
+				userInput: word,
+				schema: z.string(),
+				withCache: false,
+			}),
+			plugin.newApiService.generate({
+				systemPrompt: prompts.generate_forms,
+				userInput: word,
+				schema: z.string(),
+				withCache: false,
+			}),
+			plugin.newApiService.generate({
+				systemPrompt: prompts.morphems,
+				userInput: word,
+				schema: z.string(),
+				withCache: false,
+			}),
 		]);
 
 		const trimmedBaseEntrie = `${dictionaryEntry.replace("<agent_output>", "").replace("</agent_output>", "")}`;
