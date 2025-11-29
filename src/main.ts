@@ -87,7 +87,7 @@ export default class TextEaterPlugin extends Plugin {
 			) => {
 				if (view.file) {
 					if (!checking) {
-						getInfinitiveAndEmoji(this, editor, view.file);
+						getInfinitiveAndEmoji(this, view.file);
 					}
 					return true;
 				}

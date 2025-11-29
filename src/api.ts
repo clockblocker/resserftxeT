@@ -98,11 +98,14 @@ export class ApiService {
 		return `${dictionaryEntry.replace("<agent_output>", "").replace("</agent_output>", "")}\n\n---\n`;
 	}
 
-	async determineInfinitiveAndEmoji(word: string): Promise<string> {
-		return this.generateContent(
-			prompts.determine_infinitive_and_pick_emoji,
+	async determineInfinitive(word: string): Promise<string> {
+		const rawResponse = await this.generateContent(
+			prompts.infinitive_hebrew,
 			word,
 		);
+
+		const response = rawResponse.replaceAll("```javascript", "").replaceAll("```", "").replaceAll("\n", "").replace(/^\n+/, "").trim()
+		return response;
 	}
 
 	async normalize(text: string): Promise<string> {

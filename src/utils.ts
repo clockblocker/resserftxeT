@@ -71,12 +71,17 @@ export async function getExisingOrCreatedFileInWorterDir(
 			const originalName = item.name.trim();
 
 			// used only for folder sharding
-			const shardKey = originalName
+			// 1) NFD: decompose letters + diacritics
+			// 2) Remove Latin diacritics (0300–036F) AND Hebrew niqqud / trope (0591–05C7)
+			// 3) Keep only letters + numbers from *any* script (Latin, Hebrew, etc.)
+			const shardKeyBase = originalName
 				.normalize("NFD")
-				.replace(/[\u0300-\u036f]/g, "")
-				.replace(/[^a-zA-Z0-9]/g, "")
-				.toLowerCase()
-				.padEnd(4, "_"); // ensures at least 4 chars
+				.replace(/[\u0300-\u036f\u0591-\u05C7]/g, "")
+				.replace(/[^\p{L}\p{N}]/gu, "") // keep all letters/numbers, including Hebrew
+				.toLowerCase();
+
+			// Fallback so we never end up with an empty key
+			const shardKey = (shardKeyBase || "____").padEnd(4, "_");
 
 			const first = shardKey[0];
 			const prefix = shardKey.slice(0, 3);
@@ -90,6 +95,7 @@ export async function getExisingOrCreatedFileInWorterDir(
 			const folder = await ensureFolderExists(vault, folderPath);
 			console.log("folderPath after", folder, folder?.path);
 
+			// this regex only strips filesystem-invalid characters; Hebrew is fine
 			const cleanFileName = originalName.replace(/[\\/:*?"<>|]/g, "");
 			filePath = `${folder.path}/${cleanFileName}.md`;
 
@@ -98,7 +104,7 @@ export async function getExisingOrCreatedFileInWorterDir(
 			return file;
 		}
 	} catch (error) {
-		new Notice(`Error creating file ${item.name}: ${error.message}`);
+		new Notice(`Error creating file ${item.name}: ${String(error)}`);
 	}
 	return null;
 }
