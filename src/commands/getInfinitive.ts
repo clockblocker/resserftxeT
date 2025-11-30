@@ -40,7 +40,6 @@ async function getInfinitive(
 		const rawResponse = await plugin.newApiService.generate({
 			systemPrompt: prompts.infinitive_hebrew,
 			userInput: text,
-			schema: z.string(),
 			withCache: false,
 		});
 

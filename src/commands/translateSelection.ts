@@ -13,7 +13,6 @@ export default async function translateSelection(
 		const response = await plugin.newApiService.generate({
 			systemPrompt: prompts.translate_de_to_eng,
 			userInput: selection,
-			schema: z.string(),
 			withCache: false,
 		});
 		

@@ -86,19 +86,16 @@ export default async function fillTemplate(
 			plugin.newApiService.generate({
 				systemPrompt: prompts.generate_dictionary_entry,
 				userInput: word,
-				schema: z.string(),
 				withCache: false,
 			}),
 			plugin.newApiService.generate({
 				systemPrompt: prompts.generate_forms,
 				userInput: word,
-				schema: z.string(),
 				withCache: false,
 			}),
 			plugin.newApiService.generate({
 				systemPrompt: prompts.morphems,
 				userInput: word,
-				schema: z.string(),
 				withCache: false,
 			}),
 		]);

@@ -1,7 +1,5 @@
 import { Notice, requestUrl } from "obsidian";
-import { z } from "zod";
 import { TextEaterSettings } from "types";
-import { zodResponseFormat } from "openai/helpers/zod";
 import { logError, logWarning, formatError } from "issue-handlers";
 import OpenAI from "openai";
 
@@ -160,17 +158,15 @@ export class NewApiService {
 		return null;
 	}
 
-	async generate<T extends z.ZodTypeAny>({
+	async generate({
 		systemPrompt,
 		userInput,
-		schema,
 		withCache = true,
 	}: {
 		systemPrompt: string;
 		userInput: string;
-		schema: T;
 		withCache: boolean;
-	}): Promise<z.infer<T> | string> {
+	}): Promise<string> {
 		if (!this.openai) {
 			throw new Error(
 				"OpenAI client not initialized. Make shure that you have configured the API key in the settings.",
@@ -191,20 +187,9 @@ export class NewApiService {
 		messages.push({ content: userInput, role: "user" });
 
 		try {
-			// @ts-ignore - zodResponseFormat causes excessively deep type instantiation
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			// Only set response_format if schema is not z.string()
-			const isZString = schema instanceof z.ZodString;
-
-			const responseFormat: any = isZString ? undefined : zodResponseFormat(schema as any, "data");
-
-
 			const completion = await this.openai.chat.completions.parse({
 				messages,
 				model: this.model,
-				...(isZString
-					? {}
-					: { response_format: responseFormat }),
 				temperature: 0,
 				top_p: 0.95,
 				...(cachedId
@@ -215,8 +200,8 @@ export class NewApiService {
 						}
 					: {}),
 			});
-			console.log(completion);
-			const parsed = completion.choices?.[0]?.message?.parsed as z.infer<T> ?? completion.choices?.[0]?.message?.content as string;
+
+			const parsed = completion.choices?.[0]?.message?.content as string;
 			if (!parsed) {
 				throw new Error("No response from API");
 			}
