@@ -30,11 +30,11 @@ No explanations. No comments. No extra text. No md block quotes.
 
 3. LEMMA RULES ("lem")
 - Always fully vocalized (including clitic affixes).
-- Verbs → fully vocalized **3rd person masculine singular past form** (computational canonical form).
+- Verbs (including verbal participles) → infinitive with ל־, fully vocalized, matching the standard dictionary / Wiktionary headword (e.g., כתב → לִכְתּוֹב, יצא → לָצֵאת, דיבר → לְדַבֵּר, טייל → לְטַיֵּל, הגיע → לְהַגִּיעַ).
 - Nouns → masculine singular absolute lemma, unless the noun is inherently feminine.  
   Inherently feminine nouns (e.g., אִשָּׁה, אֲדָמָה, מְדִינָה, מַחְשָׁבָה, עִיר) keep their feminine base form as lemma.
-- Derived feminine nouns (with productive suffixes ־ה / ־ת) take the **actual** lemma in the lexicon, not a masculinized form.
-- Adjectives / participles → masculine singular absolute lemma.
+- Derived feminine nouns (with productive suffixes ־ה / ־ת) take the actual lemma in the lexicon, not a masculinized form.
+- Adjectives / adjectival participles → masculine singular absolute lemma.
 - Construct-state surfaces map to their absolute-state lemma.
 - Proper nouns → citation form (fully vocalized).
 - Pronouns and lexical particles → dictionary citation form.
@@ -49,17 +49,22 @@ Split only Hebrew syntactic clitics:
 
 4.1. Proclitics (prefixes, always single-letter):
 ה, ו, ב, כ, ל, מ, ש
-Each becomes its own morpheme with a fully vocalized prefix lemma.
-If the entire word consists of one of these letters, treat it as a single clitic morpheme.
+
+- These are split when they function as true clitics (articles, conjunctions, prepositions, complementizers).
+- **Do NOT split infinitival ל־ on verbs.**  
+  Examples: לדבר, לטייל, לכתוב, להגיע each remain a single lexical morpheme whose lemma is the fully vocalized infinitive (לְדַבֵּר, לְטַיֵּל, לִכְתּוֹב, לְהַגִּיעַ).
+- ל־ is split only when it is a preposition before a non-verbal base (e.g., ל + מנוע → { "surf": "ל", "lem": "לְ־" } + { "surf": "מנוע", "lem": "מָנוֹעַ" }).
 
 4.2. Enclitics (pronominal suffixes):
 Object/possessive endings: ם, ו, י, ך, כם, כן, נוּ, הּ, ן, etc.
 
 4.3. Multiple prefixes:
-If several clitics appear consecutively → split each separately, left → right.
+If several clitics appear consecutively → split each separately, left → right,  
+**but keep infinitival ל־ attached to its verbal base.**  
+Example: ולטייל → "ו" (clitic) + "לטייל" (verbal infinitive core).
 
 4.4. Prepositional-pronoun forms (לי, לך, לו, לה, לנו, לכם, לכן, להם, להן):
-Treat these as one morpheme with lemma "ל־". Do NOT split them.
+Treat these as one morpheme with lemma "לְ־". Do NOT split them.
 
 ---
 
@@ -67,6 +72,7 @@ Treat these as one morpheme with lemma "ל־". Do NOT split them.
 - Regular inflectional morphology ( ־ים, ־ות, ־ה, ־ית, ־ות, etc.).
 - Lexical מ־ that is part of the root or pattern (מסוכן, מתאים, מעניין, מזוזה).
 - Lexical one-letter prefixes that belong to the root/pattern (e.g., הזדמנות → single morpheme).
+- Infinitival ל־ on verbs (לדבר, לטייל, לכתוב, להגיע, etc.) is part of the lexical core, not a clitic.
 - Full lexical words (מה, מי, שמים).
 - After clitics are removed, the remaining lexical core is exactly one morpheme.
 - Do NOT split at maqaf (־) or ASCII hyphens (-). Compounds remain one morpheme unless an external syntactic clitic attaches.
@@ -80,13 +86,14 @@ For each orthographic word:
 0) If the word is a prepositional-pronoun form (לי, לך, לו, לה, לנו, לכם, לכן, להם, להן) → output as one morpheme and skip all further steps.
 
 1) Strip prefix clitics, left → right.  
-   Do NOT strip if the letter is part of the lexical root/pattern.
+   - Do NOT strip if the letter is part of the lexical root/pattern.  
+   - Do NOT strip ל־ when it functions as an infinitival marker on a verbal base (e.g., לדבר, לטייל, לכתוב, להגיע). In such cases, ל־ belongs to the lexical core.
 
 2) Strip pronominal suffixes, right → left.
 
 3) The remaining core is one lexical morpheme.
 
-4) Map every morpheme to its canonical lemma.
+4) Map every morpheme to its canonical lemma (fully vocalized), preferring the standard dictionary / Wiktionary headword.
 
 5) Preserve exact surface substrings.
 
@@ -133,9 +140,23 @@ After removing clitics, treat the base as a single morpheme with its fully vocal
 </example>
 
 <example>
+<input>לטייל</input>
+<output>
+[[{ "surf": "לטייל", "lem": "לְטַיֵּל" }]]
+</output>
+</example>
+
+<example>
+<input>ולטייל</input>
+<output>
+[[{ "surf": "ו", "lem": "וְ־" }, { "surf": "לטייל", "lem": "לְטַיֵּל" }]]
+</output>
+</example>
+
+<example>
 <input>כשהגיע</input>
 <output>
-[[{ "surf": "כ", "lem": "כְּ־" }, { "surf": "ש", "lem": "שֶ־" }, { "surf": "הגיע", "lem": "הִגִּיעַ" }]]
+[[{ "surf": "כ", "lem": "כְּ־" }, { "surf": "ש", "lem": "שֶ־" }, { "surf": "הגיע", "lem": "לְהַגִּיעַ" }]]
 </output>
 </example>
 
@@ -185,7 +206,7 @@ After removing clitics, treat the base as a single morpheme with its fully vocal
 <input>אני יוצרת את הפודקאסט הזה</input>
 <output>
 [[{ "surf": "אני", "lem": "אֲנִי" }],
- [{ "surf": "יוצרת", "lem": "יוֹצֵר" }],
+ [{ "surf": "יוצרת", "lem": "לִיצוֹר" }],
  [{ "surf": "את", "lem": "אֵת" }],
  [{ "surf": "ה", "lem": "הַ־" }, { "surf": "פודקאסט", "lem": "פּוֹדְקַסְט" }],
  [{ "surf": "ה", "lem": "הַ־" }, { "surf": "זה", "lem": "זֶה" }]]
@@ -197,9 +218,9 @@ After removing clitics, treat the base as a single morpheme with its fully vocal
 <output>
 [
   [{ "surf": "לא", "lem": "לֹא" }],
-  [{ "surf": "יצא", "lem": "יָצָא" }],
-  [{ "surf": "לי", "lem": "ל־" }],
-  [{ "surf": "לדבר", "lem": "דִּבֵּר" }]
+  [{ "surf": "יצא", "lem": "לָצֵאת" }],
+  [{ "surf": "לי", "lem": "לְ־" }],
+  [{ "surf": "לדבר", "lem": "לְדַבֵּר" }]
 ]
 </output>
 </example>
@@ -239,23 +260,7 @@ After removing clitics, treat the base as a single morpheme with its fully vocal
 <example>
 <input>לי</input>
 <output>
-[[{ "surf": "לי", "lem": "ל־" }]]
-</output>
-</example>
-
-<!-- Existing examples follow unchanged -->
-
-<example>
-<input>הספרים</input>
-<output>
-[[{ "surf": "ה", "lem": "הַ־" }, { "surf": "ספרים", "lem": "סֵפֶר" }]]
-</output>
-</example>
-
-<example>
-<input>יהודים</input>
-<output>
-[[{ "surf": "יהודים", "lem": "יְהוּדִי" }]]
+[[{ "surf": "לי", "lem": "לְ־" }]]
 </output>
 </example>
 

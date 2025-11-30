@@ -27,7 +27,7 @@ No explanations, no reasoning, no meta-text.
    - **Nouns** → masculine singular absolute, fully vowelized, unless the noun is inherently feminine.
    - **Inherently feminine nouns** (e.g., אִשָּׁה, עִיר, מְדִינָה, תּוֹרָה, אֲדָמָה) preserve their feminine base form; do NOT masculinize them.
    - **Adjectives and adjectival participles** → masculine singular absolute, fully vowelized.
-   - **Verbs (including verbal participles)** → fully vowelized **3rd person masculine singular past** form (computational canonical form), not the infinitive.
+   - **Verbs (including verbal participles)** → infinitive with ל־, fully vowelized, **matching the standard dictionary / Modern Hebrew Wiktionary infinitive headword** (e.g., כתב → לִכְתּוֹב, יצא → לָצֵאת, דיבר → לְדַבֵּר, טייל → לְטַיֵּל, הגיע → לְהַגִּיעַ).
 
    - When producing the canonical fully vowelized form, restore correct בּ/כּ/דּ/גּ/פּ/תּ (dagesh in בג״ד כפ״ת).
    - **AFFIX RULE: All clitic affixes must also be fully vowelized**, e.g.:
@@ -43,6 +43,7 @@ No explanations, no reasoning, no meta-text.
         - ־ֵנוּ  
         - ־ִי  
 
+   - When multiple dictionary standards exist, **prefer the Modern Hebrew Wiktionary headword** as the canonical Grundform for verbs, nouns, adjectives, and clitic affixes.
    - If multiple distinct senses exist, create parallel entries separated by “ | ” and keep them aligned across all blocks.
 
 ---
@@ -191,7 +192,7 @@ Samaritan
 <example>
 <hebrew_word>כתבנו</hebrew_word>
 <agent_output>
-✍️ [[כָּתַב]], Ø:[[כתב]] [kaˈtav]
+✍️ [[לִכְתּוֹב]], Ø:[[לכתוב]] [liχˈtov]
 
 ---
 
@@ -275,7 +276,7 @@ ether
 <example>
 <hebrew_word>יָצָא</hebrew_word>
 <agent_output>
-🚪 [[יָצָא]], Ø:[[יצא]] [jaˈtsa]
+🚪 [[לָצֵאת]], Ø:[[לצאת]] [laˈtseʔt]
 
 ---
 

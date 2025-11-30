@@ -2,11 +2,14 @@ import { type Editor, Notice, type TFile } from "obsidian";
 import type TextEaterPlugin from "../main";
 import { prompts } from "../prompts";
 import { longDash } from "../utils";
-import z from "zod";
-import fa from "zod/v4/locales/fa.cjs";
 
 function extractFirstBracketedWord(text: string) {
 	const match = text.match(/\[\[([^\]]+)\]\]/);
+	return match ? match[1] : null;
+}
+
+function extractNullForm(text: string) {
+	const match = text.match(/Ø:\[\[([^\]]+)\]\]/);
 	return match ? match[1] : null;
 }
 
@@ -24,9 +27,9 @@ function getIPAIndexes(str: string) {
 	return matches.length ? matches[0] : null;
 }
 
-function incertYouglishLinkInIpa(baseBlock: string) {
+function incertYouglishAndWiki(baseBlock: string) {
 	const ipaI = getIPAIndexes(baseBlock);
-	const word = extractFirstBracketedWord(baseBlock);
+	const word = extractNullForm(baseBlock);
 
 	if (!ipaI || !word) {
 		return baseBlock;
@@ -38,11 +41,16 @@ function incertYouglishLinkInIpa(baseBlock: string) {
 		return baseBlock;
 	}
 
-	return (
+	const youglishLink = `(https://youglish.com/pronounce/${word}/hebrew)`;
+
+	const withIncertYouglishLink = 
 		baseBlock.slice(0, ipa1 + 1) +
-		`(https://youglish.com/pronounce/${word}/hebrew)` +
-		baseBlock.slice(ipa1 + 1)
-	);
+		youglishLink +
+		baseBlock.slice(ipa1 + 1);
+;
+	const formattedWikiLink = `[Ø](https://ru.wiktionary.org/wiki/${word})`;
+
+	return withIncertYouglishLink.replace('Ø', formattedWikiLink)
 }
 
 async function incertClipbordContentsInContextsBlock(
@@ -103,7 +111,7 @@ export default async function fillTemplate(
 		const trimmedBaseEntrie = `${dictionaryEntry.replace("<agent_output>", "").replace("</agent_output>", "")}`;
 
 		const baseBlock = await incertClipbordContentsInContextsBlock(
-			incertYouglishLinkInIpa(trimmedBaseEntrie),
+			incertYouglishAndWiki(trimmedBaseEntrie),
 		);
 		const morphemsBlock =
 			morphems.replace("\n", "") === longDash ? "" : `${morphems}\n`;
